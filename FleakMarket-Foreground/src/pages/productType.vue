@@ -18,7 +18,8 @@
           <el-col :span="2">类别</el-col>
           <el-col :span="20">
             <ul>
-              <li v-for="item in typeItem">{{item}}</li>
+              <li @click="typeChange(0)" v-bind:class="ids.length == 0?activeclass:''">全部</li>
+              <li @click="typeChange(item.id)" v-bind:class="ids.indexOf(item.id)>-1?activeclass:''" v-for="item in typeItem">{{item.name}}</li>
             </ul>
           </el-col>
         </el-row>
@@ -26,7 +27,9 @@
           <el-col :span="2">价格</el-col>
           <el-col :span="20">
             <ul>
-              <li v-for="item in typePrice">{{item}}</li>
+              <li @click="priceChange(0)" v-bind:class="Object.keys(this.priceInterval).length == 0?activeclass:''">全部</li>
+              <li @click="priceChange(item)" v-bind:class="item.min == priceInterval.min?activeclass:''"  v-for="item in typePrice">{{item.min}}-{{item.max}}</li>
+              <li @click="priceChange(-1)" v-bind:class="priceInterval.max > 1000?activeclass:''">1000以上</li>
             </ul>
           </el-col>
         </el-row>
@@ -34,7 +37,8 @@
           <el-col :span="2">上架时间</el-col>
           <el-col :span="20">
             <ul>
-              <li v-for="item in typeTime">{{item}}</li>
+              <li @click="timeChange(0)" v-bind:class="Object.keys(this.timeInterval).length == 0?activeclass:''">全部</li>
+              <li @click="timeChange(item)" v-bind:class="item.min == timeInterval.min?activeclass:''"  v-for="item in typeTime">{{item.text}}</li>
             </ul>
           </el-col>
         </el-row>
@@ -42,11 +46,11 @@
           <el-col :span="24">
             <ul>
               <li v-for="item in typeProducts">
-                <img :src="item.imgPath" :alt="item.name" @click="gotoDetails(item)">
-                <p class="productPrice">¥<span class="price">{{item.price}}</span>.00 </p>
-                <p class="productName" @click="gotoDetails(item)">{{item.name}}</p>
+                <div class="imgbox"><img :src="item.images[0]" :alt="item.name" @click="gotoDetails(item.id)"></div>
+                <p class="productPrice">¥<span class="price">{{item.currentprice}}</span> </p>
+                <p class="productName" @click="gotoDetails(item.id)">{{item.name}}</p>
                 <div class="userPlay">
-                  <span>评价 999+</span>
+                  <span>评价 {{item.comments}}</span>
                   <span><button>加入购物车</button></span>
                 </div>
               </li>
@@ -72,30 +76,130 @@
     },
     data() {
       return {
-        Type:'',
-        typeItem:['电脑','手机','相机','键盘','鼠标','耳机','风扇','台灯','iPad','充电宝','无人机','手机充电线'],
-        typePrice:['0-100','100-200','200-300','300-400','400-500','500-600','600-700','700-800','800-900','900-1000','1000以上'],
-        typeTime:['刚刚发布','最近一周','最近一月','最近一年','其他'],
-        typeProducts:[
-        {id:1,name:'数码宝贝球',price:188,love:188,imgPath:'../../static/img/product/bj.jpg'},
-        {id:2,name:'数码宝贝球',price:188,love:188,imgPath:'../../static/img/product/bj.jpg'},
-        {id:3,name:'数码宝贝球',price:188,love:188,imgPath:'../../static/img/product/bj.jpg'},
-        {id:4,name:'数码宝贝球',price:188,love:188,imgPath:'../../static/img/product/bj.jpg'},
-        {id:5,name:'数码宝贝球',price:188,love:188,imgPath:'../../static/img/product/bj.jpg'},
-        {id:6,name:'数码宝贝球',price:188,love:188,imgPath:'../../static/img/product/bj.jpg'},
-        {id:7,name:'数码宝贝球',price:188,love:188,imgPath:'../../static/img/product/bj.jpg'},
-        {id:8,name:'数码宝贝球',price:188,love:188,imgPath:'../../static/img/product/bj.jpg'},
-        {id:9,name:'数码宝贝球',price:188,love:188,imgPath:'../../static/img/product/bj.jpg'}]
+        Type:'',//一级分类
+        typeItem:'',//二级分类
+        typePrice:[{min:0,max:100},{min:100,max:200},{min:200,max:300},{min:300,max:400},{min:400,max:500},{min:500,max:600},{min:600,max:700},{min:700,max:800},{min:800,max:900},{min:900,max:1000}],//价格区间数组
+        typeTime:[],//时间区间数组
+        ids: [],//二级分类id列表
+        priceInterval: {},//商品价格区间
+        timeInterval: {},//时间范围区间
+        typeProducts:'',//商品列表
       }
     },
-    mounted() {
-      // 数据加载
-      this.Type = JSON.parse(localStorage.getItem("menu"));
+    created() {
+      // 加载一级分类项
+      this.$axios.get('/classify/selectFcById', {
+        params: {id : this.$route.query.id}
+      }).then(res => {
+        this.Type = res.data;
+      })
+      //加载二级分类项
+      this.$axios.get('/classify/selectListScById', {
+        params: {id : this.$route.query.id}
+      }).then(res => {
+        this.typeItem = res.data;
+      })
+      //加载时间区间
+      let array = [{number:1,text:"刚刚发布"},{number:7,text:"7天以内"},{number:30,text:"30天以内"},{number:60,text:"60天以内"},{number:90,text:"90天以内"},{number:365,text:"一年以内"}]
+      array.forEach((item,index) =>{
+        let myDate = new Date();
+        let maxtime = myDate.getFullYear()+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate();
+        myDate.setTime(myDate.getTime()-(item.number*24*60*60*1000));
+        let mintime = myDate.getFullYear()+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate();
+        this.typeTime.push({min:mintime,max:maxtime,text:item.text})
+      })
+      //商品数据加载
+      this.loadProducts();
+    },
+    computed:{
+      activeclass: function() {
+          return 'active'
+      }
     },
     methods: {
-      gotoDetails(){
-        this.$router.push({ name: 'productDetails' });
+      /**
+       * 跳转商品详情页面
+       * @param {Object} pid
+       */
+      gotoDetails(pid){
+        this.$router.push({
+          name: 'productDetails' ,
+          query:{
+            id: pid
+          }
+        });
+      },
+      /**
+       * 按条件加载商品列表数据
+       */
+      loadProducts(){
+        //加载所属二级分类商品
+        this.$axios.post('/product/selectScProductById', {
+          id:this.$route.query.id,
+          ids:this.ids,
+          priceInterval:this.priceInterval,
+          timeInterval:this.timeInterval
+        }).then(res => {
+          //设置图片为商品首张图片
+          res.data.forEach(res => {
+            if(res.images != null){
+              res.images = eval('('+res.images+')');
+            }
+          });
+          this.typeProducts = res.data;
+          console.log(res.data);
+        })
+      },
+      /**
+       * 选择查询商品的二级分类
+       * @param {Object} id
+       */
+      typeChange(id){
+        let isHave = false;
+        if(id != 0){
+          this.ids.forEach((item,index) =>{
+            if(item == id){
+              isHave =true;
+              this.ids.splice(index,1);
+            }
+          })
+          if(isHave){
+          }else{
+            this.ids.push(id);
+          }
+        }else{
+          this.ids = [];
+        }
+        this.loadProducts();
+      },
+      /**
+       * 选择查询商品的价格区间
+       * @param {Object} item
+       */
+      priceChange(item){
+        if(item == 0){
+          this.priceInterval = {};
+        }else if(item == -1){
+          this.priceInterval = {min:1000,max:99999};
+        }else{
+          this.priceInterval = item;
+        }
+        this.loadProducts();
+      },
+      /**
+       * 选择查询商品的时间区间
+       * @param {Object} item
+       */
+      timeChange(item){
+        if(item == 0){
+          this.timeInterval = {};
+        }else{
+          this.timeInterval = item;
+        }
+        this.loadProducts();
       }
+
+
     }
   }
 </script>
@@ -108,18 +212,24 @@
   }
   .typeItem ul li{
     float: left;
+    line-height: 16px;
     margin: 0 10px;
     font-size: 12px;
     padding: 2px 3px;
     border-radius: 3px;
     transition: all 0.1s;
     color: #000000;
+    cursor: pointer;
   }
   .typeItem ul li:hover{
-    cursor: pointer;
     color: #FFFFFF;
     background-color: #FF8800;
   }
+  .active{
+      color: #FFFFFF !important;
+      background-color: #FF8800;
+  }
+
   .line{
     padding-bottom: 10px;
     border-bottom: 1px solid #EEEEEE;
@@ -141,9 +251,19 @@
     box-shadow: 0px 1px 10px #999999;
     transform: translateY(-0.5%);
   }
+  .image{
+    width: 250px;
+    height: 350px;
+    background-color: #000000;
+  }
+  .typeProduct li .imgbox{
+    height: 66%;
+    padding: 10px;
+  }
   .typeProduct li img{
     width: 100%;
-    height: 70%;
+    height: 100%;
+    margin-bottom: 72%;
     margin: auto;
     cursor: pointer;
   }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.ForegroundMapper.classifyMapper" >
+    <select id="selectAllclass" resultType="Fc">
+        select * from fc;
+    </select>
+
+    <select id="selectListScById" parameterType="Integer" resultType="Sc">
+        select * from sc where fcid = #{value};
+    </select>
+
+    <select id="selectFcById" parameterType="Integer" resultType="Fc">
+        select * from fc where id = #{value};
+    </select>
+
+    <select id="selectFcScByList" resultType="map">
+        select f.id,f.name,s.id sid,s.name sname from fc f,sc s where f.id = s.fcid;
+    </select>
+
+    <select id="selectScById" resultType="Sc">
+        select * from sc where id=#{value}
+    </select>
+</mapper>

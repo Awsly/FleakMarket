@@ -17,7 +17,7 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')">立即登录</el-button>
+              <el-button type="primary" @click="toLogin()">立即登录</el-button>
             </el-form-item>
 
           </el-form>
@@ -51,7 +51,7 @@
     </div>
   </div>
 </template>
-
+K
 <script>
   import HeaderTop from "../components/Header.vue";
 
@@ -59,22 +59,52 @@
     components: {
       HeaderTop
     },
-    mounted(){
-      console.log(this.$route.params);
-
-    },
     data() {
       return {
         ruleForm: {
-          username:'',
-          password:''
+          username: '',
+          password: ''
         },
-        activeName: this.$route.params.name
+        activeName: this.$route.query.name
       }
-  },
-  methods: {
-
-  }
+    },
+    methods: {
+      closeTab: function(){
+        loading.close();
+      },
+      toLogin: function() {
+        if (this.ruleForm.username.length == 0) {
+          alert("请输入用户名");
+        } else if (this.ruleForm.password.length == 0) {
+          alert("请输入密码");
+        } else {
+          const loading = this.$loading({
+            lock: true,
+            text: '正在登录...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
+          this.$axios.get('/user/toLogin', {
+            params: {
+              username: this.ruleForm.username,
+              password: this.ruleForm.password
+            }
+          }).then(res => {
+            loading.close();
+            if(res.data != ''){
+              this.$store.commit('userInfo',res.data.userid)
+              this.$router.push({
+                path:'/'
+              })
+            }else{
+              this.$message.error('用户名或密码错误！');
+            }
+          })
+        }
+        this.ruleForm.username = '';
+        this.ruleForm.password = '';
+      }
+    }
   }
 </script>
 
@@ -83,8 +113,8 @@
     width: 100%;
     height: 100%;
     background-image: url(../../static/img/background/background.png);
-    background-size:100% 100%;
-    background-repeat:no-repeat;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
   }
 
   .title {
@@ -104,11 +134,12 @@
     right: calc(50% - 250px);
     box-shadow: 1px 1px 10px #555555;
     background-color: rgba(255, 255, 255, 0.8);
-
   }
-  .view .el-form{
+
+  .view .el-form {
     padding-top: 20px;
   }
+
   .view .el-form-item {
     width: 90%;
     padding-top: 8px;
@@ -116,34 +147,36 @@
     margin-bottom: 0;
   }
 
-
-
   /* 登录注册公共样式 */
-  .el-form-item p{
+  .el-form-item p {
     width: 10%;
     height: 100%;
     float: left;
   }
-  .el-form-item p img{
+
+  .el-form-item p img {
     width: 70%;
   }
-  .el-form-item .el-input{
+
+  .el-form-item .el-input {
     width: 80%;
     height: 40px;
   }
 
-
   /* Lform登录表单样式  */
-  .Lform{
+  .Lform {
     margin-top: 10px;
   }
-  .Lform .el-form-item p{
+
+  .Lform .el-form-item p {
     margin-top: 4px;
   }
-  >>> .Lform .el-input__inner{
-      height: 45px;
-   }
-  .Lform .el-button{
+
+  .Lform .el-input__inner {
+    height: 45px;
+  }
+
+  .Lform .el-button {
     width: 72%;
     margin-top: 30px;
     height: 45px;
@@ -151,30 +184,33 @@
     margin-left: 14%;
   }
 
-
   /* Rform注册表单样式  */
-  .Rform .el-form-item p{
+  .Rform .el-form-item p {
     margin-top: 3px;
   }
-  .Rform .verify{
+
+  .Rform .verify {
     width: 100%;
     float: left;
     margin-left: 9%;
   }
-  >>>.Rform .verify .el-input{
+
+  .Rform .verify .el-input {
     width: 30%;
   }
-  >>>.Rform .el-form-item_content{
+
+  .Rform .el-form-item_content {
     margin-bottom: 0;
   }
-  .Rform .verify .el-button{
+
+  .Rform .verify .el-button {
     width: 30%;
     margin-left: 10%;
   }
-  .Rform .relo .el-button{
+
+  .Rform .relo .el-button {
     width: 70%;
     margin-top: 30px;
     margin-left: 14%;
   }
-
 </style>

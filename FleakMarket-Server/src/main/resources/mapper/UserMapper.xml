@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.ForegroundMapper.UserMapper" >
+  <select id="toLogin" resultType="Account" parameterType="Account" >
+    select userid,username,password from account where
+    1=1
+    <if test="username != null" >
+      and username = #{username}
+    </if>
+    <if test="password != null" >
+      and password = #{password}
+    </if>
+  </select>
+  <select id="selectUserById" resultType="User" parameterType="Integer" >
+    select * from user where id = #{value}
+  </select>
+  <update id="updateUserById" parameterType="User">
+    update user
+    <trim prefix="set" suffixOverrides=",">
+      <if test="id!=null">id=#{id},</if>
+      <if test="username!=null">username=#{username},</if>
+      <if test="phonenumber!=null">phonenumber=#{phonenumber},</if>
+      <if test="mail!=null">mail=#{mail},</if>
+      <if test="address!=null">address=#{address},</if>
+      <if test="sex!=null">sex=#{sex},</if>
+      <if test="signature!=null">signature=#{signature},</if>
+    </trim>
+    WHERE id=#{id}
+  </update>
+  <select id="selectCountById" parameterType="Integer" resultType="Integer">
+    select count(*) from product where uid = #{value}
+  </select>
+</mapper>

@@ -1,12 +1,11 @@
 <template>
   <div class="bodyd">
-    <HeaderTop></HeaderTop>
     <Search></Search>
-
-    <el-row class="containerDetails" style="float: left;padding-left: 20%;">
-      <el-col :span="14">
+    <el-row class="containerDetails">
+      <el-col :span="12" :offset="6">
         <div class="pro">
-          <div class="pdtime">发布于 : 2021-09-02 12:18:32 200次浏览 10人想要</div>
+          <!-- 商品统计模块 -->
+          <div class="pdtime"><span>发布于 : {{data.creattime}}</span> <span style="margin-left: 20px;">浏览人次：{{data.clicks}}次</span></div>
           <!-- 商品区域 -->
           <el-row>
             <el-col :span="10">
@@ -15,11 +14,7 @@
               </div>
               <div class="pimgs">
                 <ul>
-                  <li><img :src="data.img[0]" alt="图片呢"></li>
-                  <li><img :src="data.img[1]" alt="图片呢"></li>
-                  <li><img :src="data.img[2]" alt="图片呢"></li>
-                  <li><img :src="data.img[3]" alt="图片呢"></li>
-                  <li><img :src="data.img[4]" alt="图片呢"></li>
+                  <li v-for="item in data.images"><img :src="item" alt="图片呢"></li>
                 </ul>
               </div>
             </el-col>
@@ -31,11 +26,11 @@
               <table class="pd">
                 <tr>
                   <td>价格</td>
-                  <td class="pdprice">¥{{data.price}}</td>
+                  <td class="pdprice">¥{{data.currentprice}}</td>
                 </tr>
                 <tr>
                   <td>商品原价</td>
-                  <td style="color: #999999;">¥<s>{{data.originalPrice}}</s></td>
+                  <td style="color: #999999;">¥<s>{{data.originalprice}}</s></td>
                 </tr>
                 <tr>
                   <td>交易地址</td>
@@ -43,20 +38,20 @@
                 </tr>
                 <tr>
                   <td>商品状态</td>
-                  <td>{{data.status == 1?"未出售":"已出售"}}</td>
+                  <td>{{data.end == null?"未出售":"已出售"}}</td>
                 </tr>
                 <tr>
                   <td>交易方式</td>
-                  <td>{{data.paytype}}</td>
+                  <td>{{data.deal}}</td>
                 </tr>
                 <tr>
                   <td>卖家</td>
-                  <td>王大锤</td>
+                  <td>{{data.username}}</td>
                 </tr>
               </table>
               <div class="pdbutton">
                 <el-button type="success">联系卖家</el-button>
-                <el-button type="danger" icon="el-icon-edit">收藏</el-button>
+                <el-button type="danger" icon="el-icon-edit" @click="addLove(data.id)">收藏</el-button>
               </div>
             </el-col>
           </el-row>
@@ -66,174 +61,103 @@
             <el-col>商品描述</el-col>
           </el-row>
           <el-row class="buyer-describe">
-            <p>良品铺子 鸡肉类 奥尔良小鸡腿 108gX1袋装 肉类熟食卤味办公室鸡肉类零食小吃食品其他小包
-
-              良品铺子 鸡肉类 奥尔良小鸡腿 108gX1袋装 肉类熟食卤味办公室鸡肉类零食小吃食品其他小包装</p>
+            <p>{{data.details}}</p>
           </el-row>
 
+          <!-- 评论统计模块 -->
           <div class="buyer">
-            <span>891条评论</span>
-            <div class="pagesmall"><i class="el-icon-refresh-right"></i>刷新</div>
+            <span>{{totalCount}}条评论</span>
+            <div class="pagesmall" @click="loadcomments"><i class="el-icon-refresh-right"></i>刷新</div>
           </div>
-          <ul>
-            <li>
-              <el-row class="buyer-describe">
-                <div class="buyer-headerimg">
-                  <img src="../../static/img/slide1.jpg" />
-                </div>
-                <div class="buyer-sayed">
-                  <div class="user">用户名</div>
-                  <div class="buyer-text">hahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahah</div>
-                  <div class="buyer-date">2019.12.09 9:28</div>
-                </div>
-              </el-row>
-            </li>
-            <li>
-              <el-row class="buyer-describe">
-                <div class="buyer-headerimg">
-                  <img src="../../static/img/slide1.jpg" />
-                </div>
-                <div class="buyer-sayed">
-                  <div class="user">用户名</div>
-                  <div class="buyer-text">hahahahahhahahahahhahahahahhahahahahhahahahahhahah
-                    ahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahah
-                    ahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahah
-                    ahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahah
-                    hahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahah
-                  </div>
-                  <div class="buyer-date">2019.12.09 9:28</div>
-                </div>
-              </el-row>
-            </li>
-            <li>
-              <el-row class="buyer-describe">
-                <div class="buyer-headerimg">
-                  <img src="../../static/img/slide1.jpg" />
-                </div>
-                <div class="buyer-sayed">
-                  <div class="user">用户名</div>
-                  <div class="buyer-text">hahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahahhahahahah</div>
-                  <div class="buyer-date">2019.12.09 9:28</div>
-                </div>
-              </el-row>
-            </li>
-            <li class="pagebig">
-              <div class="buyer-headerimg">
-              </div>
-              <el-pagination background layout="total,prev, pager, next,jumper" prev-text=" 上一页 " next-text=" 下一页 "
-                :total="total">
-              </el-pagination>
-            </li>
-          </ul>
 
+          <!-- 发布评论模块 -->
           <div class="leaveMessage">
-            <div class="meimg"><img src="../../static/img/icon/QQ.jpg" alt=""></div>
+            <div class="meimg"><img :src="User.userimgpath" alt=""></div>
             <textarea :style="backcolor" maxlength="200" placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力、反动的言论。" @mouseenter="enter"
               @mouseleave="leave" v-model="textarea"></textarea>
             <div class="leaveMessageBtn">
-              <button>提交</button>
+              <button @click="insertComment(data.id)">提交</button>
             </div>
           </div>
+
+          <!-- 评论模块 -->
+          <ul>
+            <li v-for="item in comments.slice((currentPage-1)*PageSize,currentPage*PageSize)">
+              <el-row class="buyer-describe">
+                <div class="buyer-headerimg">
+                  <img :src="item.userimgpath" />
+                </div>
+                <div class="buyer-sayed">
+                  <div class="user">{{item.username}}</div>
+                  <div class="buyer-text">{{item.text}}</div>
+                  <div class="buyer-date">{{item.time}}</div>
+                </div>
+              </el-row>
+            </li>
+            <!-- 评论统计模块 -->
+            <li class="pagebig" v-if="comments != ''">
+              <div class="buyer-headerimg">
+              </div>
+              <el-pagination background
+                layout="total,prev, pager, next,jumper"
+                :page-size="PageSize"
+                prev-text=" 上一页 "
+                next-text=" 下一页 "
+                :total="totalCount"
+                @current-change="handleCurrentChange"
+                >
+              </el-pagination>
+            </li>
+          </ul>
         </div>
       </el-col>
-      <el-col :span="4">
-        <ul class="ListOfUserGoods">
-          <li>该用户的其他商品:</li>
-          <li>
-            <el-card :body-style="{ padding: '0px' }">
-              <img  src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
-              <div style="padding: 7px;">
-                <span>烤面筋</span>
-                <div class="bottom clearfix">
-                  <span>$100</span>
-                  <el-button type="text" class="button">前往查看</el-button>
-                </div>
-              </div>
-            </el-card>
-          </li>
-          <li>
-            <el-card :body-style="{ padding: '0px' }">
-              <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
-              <div style="padding: 14px;">
-                <span>好吃的汉堡</span>
-                <div class="bottom clearfix">
-                  <span>$100</span>
-                  <el-button type="text" class="button">前往查看</el-button>
-                </div>
-              </div>
-            </el-card>
-          </li>
-          <li>
-            <el-card :body-style="{ padding: '0px' }">
-              <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
-              <div style="padding: 14px;">
-                <span>好吃的汉堡</span>
-                <div class="bottom clearfix">
-                  <span>$100</span>
-                  <el-button type="text" class="button">前往查看</el-button>
-                </div>
-              </div>
-            </el-card>
-          </li>
-        </ul>
-      </el-col>
     </el-row>
-
     <FooterBottom></FooterBottom>
   </div>
 </template>
 
 <script type="text/javascript">
-  import HeaderTop from "../components/Header.vue";
   import Search from "../components/Search.vue";
   import FooterBottom from "../components/Footer.vue";
+  import moment from "moment";
   export default {
     components: {
-      HeaderTop,
       Search,
       FooterBottom
     },
     data() {
       return {
-        data: {},
+        User: '',
+        data: '',
         imgblur: '',
         currentPage: 1,
-        total: 100,
         layout: 'slot,pager,next',
         textarea: '',
         backcolor: '',
-        comments: ''
-
+        comments: '',
+        PageSize:5,
+        totalCount:1,
       }
     },
-    mounted() {
-      // 数据加载
-      this.data = {
-        pid: 1,
-        name: "联想小新 Air 13 Pro",
-        address: "唐山学院北校区",
-        text: "刚买的电脑不想要了，低价处理，质量有保障！",
-        price: 100,
-        originalPrice: 1000,
-        date: "2019.09.09",
-        status: 1,
-        paytype: "在线交易/线下交易",
-        img: ["https://img.alicdn.com/imgextra/i1/725677994/O1CN01UXcGPZ28vIjBQHsbN_!!725677994.jpg_430x430q90.jpg",
-          "https://img.alicdn.com/imgextra/i1/725677994/O1CN01UXcGPZ28vIjBQHsbN_!!725677994.jpg_60x60q90.jpg",
-          "https://img.alicdn.com/imgextra/i2/725677994/TB2w_Ovg6QnBKNjSZSgXXXHGXXa_!!725677994.jpg_60x60q90.jpg",
-          "https://img.alicdn.com/imgextra/i1/725677994/O1CN01Maov7r28vIguNwGGO_!!725677994.jpg_60x60q90.jpg",
-          "https://img.alicdn.com/imgextra/i1/725677994/O1CN01Maov7r28vIguNwGGO_!!725677994.jpg_60x60q90.jpg"
-        ]
-      }
-      this.comments = []
-      this.imgblur = this.data.img[0];
+    created() {
+      //请求用户信息
+      this.$axios.get('/user/selectUserById', {
+        params: {
+          id: this.$store.state.userid
+        }
+      }).then(res => {
+        this.User = res.data;
+      })
+      //加载商品详情
+      this.loadproductdetails();
+      //加载用户评论
+      this.loadcomments();
     },
     methods: {
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
+      //评论跳转页
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        // 改变默认的页数
+        this.currentPage=val;
       },
       enter() {
         this.backcolor = "background:#FFFFFF";
@@ -241,6 +165,82 @@
       leave() {
         this.backcolor = this.textarea.length == 0 ? "background:#f4f5f7" :
           "background:#FFFFFF;border: 1px solid #00a1d6;";
+      },
+      //加载商品详情方法
+      loadproductdetails(){
+        //商品数据详情
+        this.$axios.get('/product/selectProductById', {
+          params: {id: this.$route.query.id}
+        }).then(res => {
+          this.data = res.data;
+          this.data.images = eval('('+res.data.images+')');
+          this.imgblur = this.data.images[0];
+        })
+      },
+      //加载商品列表方法
+      loadcomments(){
+        //商品评论列表查询
+        this.$axios.get('/product/selectCommentById', {
+          params: {id: this.$route.query.id}
+        }).then(res => {
+          this.comments = res.data;
+          this.totalCount = res.data.length;
+        })
+      },
+      //添加商品进收藏方法
+      addLove(id){
+        //判断商品是否添加
+        this.$axios.post('/product/selectLoveById', {
+          uid: this.$store.state.userid,
+          pid: id
+        }).then(res => {
+          if(res.data < 1){
+            //商品添加收藏
+            this.$axios.post('/product/insertProductToLove', {
+              uid: this.$store.state.userid,
+              pid: id
+            }).then(res => {
+              if(res.data == 1){
+                this.$message({
+                  message: '商品收藏成功！',
+                  type: 'success'
+                });
+              }
+            })
+          }else{
+            this.$message({
+              message: '请勿重复收藏！',
+              type: 'warning'
+            });
+          }
+        });
+      },
+      //发布评论
+      insertComment(id){
+        let date = moment().format('YYYY-MM-DD HH:mm:ss');
+        if(this.textarea != null && this.textarea.length <1){
+          this.$message({
+            message: '内容不能为空！',
+            type: 'error'
+          });
+        }else{
+          this.$axios.post('/product/insertComment', {
+            uid: this.$store.state.userid,
+            pid: id,
+            text: this.textarea,
+            time: date
+          }).then(res => {
+             if(res.data == 1){
+               this.$message({
+                 message: '发布成功！',
+                 type: 'success'
+               });
+               this.textarea = '';
+               this.leave();
+               this.loadcomments();
+             }
+          });
+        }
       }
     }
   }
@@ -248,7 +248,9 @@
 
 <style scoped="scoped">
   .containerDetails {
-    background-color: #f7f8f8;
+    margin-top: -19px;
+    margin-bottom: 20px;
+    background-color: #FFFFFF;
   }
 
   .logo {
@@ -263,7 +265,7 @@
     height: 40px;
     display: flex;
     margin-top: 20px;
-    background-color: #00FFFF;
+    background-color: #FCFCFC;
     border: 3px solid rgba(255, 153, 0);
   }
 
@@ -286,11 +288,11 @@
 
   .pro {
     width: 100%;
-    padding: 10px;
+    padding: 10px 20px;
     margin-top: 15px;
     margin-bottom: 10px;
+    border: 1px solid #EEEEEE;
     border-radius: 10px 10px 10px 10px;
-    background-color: #FFFFFF;
   }
 
   .pdtime {
@@ -331,7 +333,7 @@
   }
 
   .pdetails {
-    padding-left: 40px;
+    padding-left: 80px;
   }
 
   .pdname {
@@ -467,6 +469,9 @@
     cursor: pointer;
 
   }
+  .buyer-sayed .buyer-text{
+    min-height: 60px;
+  }
 
   .buyer-sayed .buyer-date {
     font-size: 13px;
@@ -476,6 +481,8 @@
   .leaveMessage {
     width: 100%;
     height: 200px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #EEEEEE;
   }
 
   .leaveMessage .meimg {
@@ -485,11 +492,11 @@
   }
 
   .meimg img {
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
     float: left;
-    margin: 30px 35px;
-    margin-left: 60px;
+    margin-left: 40px;
+    margin-top: 70px;
     border-radius: 50%;
   }
 
@@ -526,6 +533,7 @@
     outline: none;
     cursor: pointer;
     border-radius: 4px;
+    margin-right: 10px;
     border: 1px solid #00a1d6;
     background-color: #00a1d6;
   }

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.ForegroundMapper.ProductMapper" >
+
+    <select id="selectByNew" resultType="Product">
+        select * from product where DATE_SUB(CURDATE(),INTERVAL 7 DAY) and status=0;
+    </select>
+
+    <select id="selectByHot" parameterType="Integer" resultType="Product">
+        select * from product where status=0
+        <if test="value == 1">
+            and sid in (2)
+        </if >
+        <if test="value == 2">
+            and sid in (13,14)
+        </if >
+        <if test="value == 3">
+            and sid  in (29,30,31,32,33)
+        </if >
+        <if test="value == 4">
+            and sid in (20,21)
+        </if >
+    </select>
+
+    <select id="selectProductById" parameterType="Integer" resultType="map">
+        select p.*,u.username from product p,user u where p.uid=u.id and p.id = #{value};
+    </select>
+
+    <select id="selectScProductById" parameterType="Map" resultType="Product">
+        select p.* from product p,fc f,sc s where p.sid=s.id and s.fcid=f.id and s.fcid=#{id} and status=0
+        <if test="ids!=null and ids.size()>0">
+            and s.id in
+            <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="priceInterval!=null and priceInterval.size()>0">
+            and  currentprice BETWEEN ${priceInterval.min} and ${priceInterval.max}
+        </if>
+        <if test="timeInterval!=null and timeInterval.size()>0">
+           and  creattime BETWEEN '${timeInterval.min}' and '${timeInterval.max}'
+        </if>
+    </select>
+
+    <insert id="insertProductByUser" parameterType="Product">
+        insert into
+        product
+        (
+        <trim prefix="" suffixOverrides=",">
+            <if test="name!=null">
+                name,
+            </if>
+            <if test="details!=null">
+                details,
+            </if>
+            <if test="images!=null">
+                images,
+            </if>
+            <if test="clicks!=null">
+                clicks,
+            </if>
+            <if test="creattime!=null">
+                creattime,
+            </if>
+            <if test="originalprice!=null">
+                originalprice,
+            </if>
+            <if test="currentprice!=null">
+                currentprice,
+            </if>
+            <if test="deal!=null">
+                deal,
+            </if>
+            <if test="address!=null">
+                address,
+            </if>
+            <if test="comments!=null">
+                comments,
+            </if>
+            <if test="sid!=0">
+                sid,
+            </if>
+            <if test="uid!=0">
+                uid
+            </if>
+        </trim>
+        )
+        values
+        (
+        <trim prefix="" suffixOverrides=",">
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="details!=null">
+                #{details},
+            </if>
+            <if test="images!=null">
+                #{images},
+            </if>
+            <if test="clicks!=null">
+                #{clicks},
+            </if>
+            <if test="creattime!=null">
+                #{creattime},
+            </if>
+            <if test="originalprice!=null">
+                #{originalprice},
+            </if>
+            <if test="currentprice != null">
+                #{currentprice},
+            </if>
+            <if test="deal != null">
+                #{deal},
+            </if>
+            <if test="address != null">
+                #{address},
+            </if>
+            <if test="comments != null">
+                #{comments},
+            </if>
+            <if test="sid != 0">
+                #{sid},
+            </if>
+            <if test="uid != 0">
+                #{uid}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <select id="selectCommentById" resultType="java.util.HashMap" parameterType="Integer">
+        select u.id,u.username,u.userimgpath,c.time,c.text from comment c,user u where c.uid=u.id and c.pid=#{value};
+    </select>
+
+    <insert id="insertProductToLove" parameterType="map">
+        insert into userlove(uid,pid) value (#{uid},#{pid});
+    </insert>
+
+    <select id="selectLoveById" resultType="int" parameterType="map">
+        select count(*) from userlove where uid=#{uid} and pid=#{pid}
+    </select>
+
+    <insert id="insertComment" parameterType="map">
+        insert into comment(pid,uid,text,time) value (#{pid},#{uid},#{text},#{time})
+    </insert>
+
+    <select id="selectMyCollectById" resultType="Product" parameterType="Integer">
+        select p.* from userlove u,product p where u.pid=p.id and u.uid=#{value}
+    </select>
+
+    <select id="selectMyProductById" resultType="Product" parameterType="Integer">
+        select * from product where uid=#{value}
+    </select>
+
+    <update id="updateProductByUser" parameterType="Product">
+        update product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="sid!=0">
+                sid=#{sid},
+            </if>
+            <if test="currentprice!=null">
+                currentprice=#{currentprice},
+            </if>
+            <if test="originalprice!=null">
+                originalprice=#{originalprice},
+            </if>
+            <if test="deal!=null">
+                deal=#{deal},
+            </if>
+            <if test="address!=null">
+                address=#{address},
+            </if>
+            <if test="details!=null">
+                details=#{details},
+            </if>
+            <if test="images!=null">
+                images=#{images},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteProductById" parameterType="int">
+        delete from product where id=#{value}
+    </delete>
+
+    <delete id="deleteProductToLove" parameterType="map">
+        delete from userlove where uid=#{uid} and pid=#{pid}
+    </delete>
+</mapper>

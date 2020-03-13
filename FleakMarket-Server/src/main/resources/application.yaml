@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.22.128:3306/market?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 1000MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.ct.model.ForegroundModel
+
+server:
+  port: 9999
+
+fastdfs_ip: http://192.168.22.128/

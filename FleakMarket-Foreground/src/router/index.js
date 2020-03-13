@@ -1,32 +1,12 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
 import Router from 'vue-router'
 import index from '@/pages/index.vue'
 import login from '@/pages/login.vue'
 import productDetails from '@/pages/ProductDetails.vue'
 import productType from '@/pages/productType.vue'
+import mine from '@/pages/User/mine.vue'
 
 Vue.use(Router)
-Vue.use(Vuex)
-
-const store = new Vuex.Store({
-  //strict:true,  // 开启严格模式  确保state 中的数据只能 mutations 修改
-  state:{
-    count:0
-  },
-  mutations:{
-
-  },
-  actions:{
-
-  },
-  getters:{
-
-  },
-  modules:{
-
-  }
-})
 
 export default new Router({
   routes: [
@@ -36,7 +16,7 @@ export default new Router({
       component: index
     },
     {
-      path: '/login/:name',
+      path: '/login',
       name: 'login',
       component: login
     },
@@ -49,6 +29,11 @@ export default new Router({
       path: '/productType',
       name: 'productType',
       component: productType
+    },
+    {
+      path: '/mine',
+      name: 'mine',
+      component: mine
     }
   ]
 })

@@ -59,9 +59,12 @@
   }
 
   .Footer{
+    width: 100%;
     padding: 0;
-    margin: 0;
+    bottom: 0;
+    position: relative;
     background-color: #FCFCFC;
+    border-top: 1px solid #E5E9EF;
   }
   .row-info{
     padding: 30px 0;
