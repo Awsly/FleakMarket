@@ -6,8 +6,8 @@
       </el-col>
       <el-col :span="8">
         <div class="inpbtn">
-          <input type="text">
-          <button>搜索</button>
+          <input type="text" v-model="serachText">
+          <button @click="SearchText">搜索</button>
         </div>
       </el-col>
       <el-col :span="6">
@@ -18,7 +18,6 @@
         <span class="userName" v-if="isNotLogin" @click="gotoLogin('register')">注册</span>
         <span class="userName" v-if="!isNotLogin" @click="gotoMine">{{userInfo.username}}</span>
         <span class="userName" v-if="!isNotLogin" @click="gooutLogin()">退出登录</span>
-        <span class="shopCart"><i class="el-icon-present"></i>&nbsp;我的收藏</span>
       </el-col>
     </el-row>
   </div>
@@ -30,6 +29,7 @@ export default {
     return {
       id: 0,
       userInfo: '',
+      serachText: '',//带参查询
       isNotLogin: true,
       imgPath: "../../static/img/akari.jpg",
     }
@@ -52,6 +52,7 @@ export default {
     }
   },
   methods: {
+    //跳转我的账户页面
     gotoMine () {
       //判断用户是否登录
       if(this.id == 0){
@@ -63,6 +64,7 @@ export default {
         this.$router.push({ name: 'mine' });
       }
     },
+    //跳转登陆页面
     gotoLogin(data){
       this.$router.push({
         name: 'login',
@@ -71,12 +73,22 @@ export default {
         },
       });
     },
+    //退出登录
     gooutLogin(){
       this.$store.commit('userInfo',0);
       this.$router.push({
         name: 'login',
         query: {
           name: 'login'
+        },
+      });
+    },
+    SearchText(){
+      this.$router.push({
+        name: 'productType',
+        query: {
+          id: 0,
+          serachText:this.serachText
         },
       });
     }
@@ -112,14 +124,18 @@ export default {
   color: #ffffff;
   font-size: 16px;
   font-weight: 800;
-  background-color: #fa0;
+  cursor: pointer;
+  background-color: #FF9900;
+}
+.inpbtn button:hover{
+  background-color: #FF8800;
 }
 .userImg {
   display: block;
   float: left;
   margin-right: 10px;
-  cursor: pointer;
   margin-top: 22px;
+  cursor: pointer;
 }
 .userImg img {
   height: 48px;

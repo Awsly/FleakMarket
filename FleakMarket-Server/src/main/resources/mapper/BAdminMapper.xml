@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.BackgroundMapper.BAdminMapper">
+    <select id="selectAdminList" parameterType="Admin" resultType="Admin">
+        select * from admin where 1=1
+        <if test="tname!=null">
+            and tname like concat('%','${tname}','%')
+        </if>
+        <if test="phone!=null">
+            and phone like concat('%','${phone}','%')
+        </if>
+    </select>
+    <update id="updateAdminById" parameterType="Admin">
+        update admin
+        <trim prefix="set" suffixOverrides=",">
+            <if test="tname!=null">tname=#{tname},</if>
+            <if test="username!=null">username=#{username},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="logintime!=null">logintime=#{logintime},</if>
+        </trim>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteAdminById" parameterType="Integer">
+        delete from admin where id=#{value}
+    </delete>
+
+    <select id="selectAdminByUser" parameterType="Admin" resultType="Admin">
+        select * from admin where username=#{username} and password=#{password};
+    </select>
+
+    <insert id="InsertAdminByAdmin" parameterType="Admin">
+        insert into admin(tname,username,password,phone) values(#{tname},#{username},#{password},#{phone})
+    </insert>
+</mapper>

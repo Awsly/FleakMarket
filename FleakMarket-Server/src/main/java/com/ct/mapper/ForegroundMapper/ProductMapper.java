@@ -1,7 +1,6 @@
 package com.ct.mapper.ForegroundMapper;
 
 import com.ct.model.ForegroundModel.Product;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,11 +30,19 @@ public interface ProductMapper {
     //查询用户收藏列表
     List<Product> selectMyCollectById(int id);
     //查询我的商品
-    List<Product> selectMyProductById(int id);
+    List<Map<String,Object>> selectMyProductById(int id);
     //修改商品数据
     int updateProductByUser(Product product);
     //删除商品信息
     int deleteProductById(int id);
     //取消收藏方法
     int deleteProductToLove(Map<String, Object> param);
+    //评论的屏蔽与解屏蔽
+    int updateCommentById(Map<String, Object> param);
+    //下架以出售商品
+    int soldOutProduct();
+    //查询官方推荐商品
+    List<Product> selectByCommend();
+    //修改我的商品售出状态
+    int updateOrderProductStatus(Map<String, Object> map);
 }

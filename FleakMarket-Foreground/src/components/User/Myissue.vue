@@ -42,7 +42,7 @@
         <el-col :span="8">
           <el-form-item label="交易方式" prop="deal">
             <el-select v-model="productData.deal" placeholder="请选择交易方式">
-              <el-option v-for="item in dealItem" :value="item"></el-option>
+              <el-option v-for="item in dealItem" :value="item" :key="item.sid"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -62,9 +62,6 @@
               :on-remove="handleRemove">
               <i class="el-icon-plus"></i>
             </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
           </el-form-item>
         </el-col>
       </el-row>
@@ -78,7 +75,7 @@
       <el-row>
         <el-col :span="20">
           <el-form-item label="商品描述" prop="details">
-            <el-input type="textarea" v-model="productData.details" rows="5"maxlength="100" placeholder="请填写商品描述"></el-input>
+            <el-input type="textarea" v-model="productData.details" rows="5" maxlength="500" placeholder="请填写商品描述"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -97,30 +94,30 @@
   export default{
     data(){
       return {
-        User:'',
-        creattime: '',
-        //发布商品
+        User:'',//用户对象
+        creattime: '',//创建时间
+        //发布商品对象
         productData: {
-          name: '',
-          creattime: '',
-          sid: '',
-          currentprice: '',
-          originalprice: '',
-          deal: '',
-          address: '',
-          details: '',
-          images: ''
+          name: '',//商品名称
+          creattime: '',//创建时间
+          sid: '',//二级分类id
+          currentprice: '',//商品售价
+          originalprice: '',//商品原价
+          deal: '',//交易方式
+          address: '',//交易地址
+          details: '',//商品详情
+          images: ''//商品图片
         },//商品数据
         productType: '',//商品类型
         productTypeItem: [],//商品类型选项
-        dealItem: ['线上交易','线下交易','面谈'],//交易类型数组
-        formDate:"",
-        dialogImageUrl: '',
-        dialogVisible: false,
+        dealItem: ['线上交易','线下交易'],//交易类型数组
+        formDate:"",//图片数据
+        dialogImageUrl: '',//弹出层图片
+        dialogVisible: false,//弹出层控制器
         rules: {
           name: [
             { required: true, message: '请输入商品名称', trigger: 'blur' },
-            { min: 0, max: 15, message: '长度在 0 到 15 个字符', trigger: 'blur' }
+            { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'blur' }
           ],
           sid: [
             { required: true, message: '请选择商品类型', trigger: 'blur' }
@@ -173,6 +170,9 @@
       let date = moment().format('YYYY-MM-DD HH:mm:ss');
       this.productData.creattime = date;
       this.creattime = this.productData.creattime;
+
+      //点击量+1
+      this.clickNum();
     },
     methods:{
       //提交商品表单
@@ -185,7 +185,7 @@
             setTimeout(res => {
               this.resetForm(productData);
               this.$refs.upload.clearFiles();
-            },600);
+            },800);
           } else {
             return false;
           }
@@ -247,6 +247,27 @@
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
+      },
+      //统计点击量
+      clickNum(){
+        //判断数据库中是否存在当前日期
+        this.$axios.post('/utils/selectDateFromStatis',{
+          dates: moment().format('YYYY-MM-DD')
+        }).then(res => {
+          if(res.data.length == 0){
+            //如果数据库不存在今天的数据，插入今天日期与默认点击量
+            this.$axios.post('/utils/insertDateInStatis',{
+              dates: moment().format('YYYY-MM-DD'),
+            });
+          }else{
+            //如果数据库存在今天的数据，获取当日点击量+1
+            this.$axios.post('/utils/updateNumInStatis',{
+              id: res.data.id,
+              visitNum: res.data.visitNum,
+              clickNum: (res.data.clickNum+1)
+            });
+          }
+        });
       }
     }
   }

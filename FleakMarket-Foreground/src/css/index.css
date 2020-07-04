@@ -4,7 +4,7 @@
 }
 
 h2 {
-  margin-top: 20px;
+  margin-top: 0px;
   margin-bottom: 0px;
   margin-left: 5px;
   font-weight: 100;
@@ -132,9 +132,6 @@ h2 {
 
 
 /* 首页热门商品*/
-.hot,.new{
-  background-color: #fcfcfc;
-}
 .center {
   border-radius: 10px;
   padding: 0;
@@ -162,6 +159,7 @@ h2 {
   text-align-last: left;
   background-color: #FFFFFF;
   box-shadow: 2px 4px 8px #555555;
+  overflow: hidden;
 }
 
 .hot-product p {
@@ -262,14 +260,15 @@ h2 {
   margin-top: 15px;
 }
 .userPlay span{
-  margin: 0 10px;
-  cursor: pointer;
+  margin-left: 10px;
 }
 .userPlay button{
   float: right !important;
-  font-size: 12px;
+  font-size: 10px;
+  height: 20px;
   color: #FFFFFF;
   background-color: #FF5500;
+  border-radius: 3px;
   margin: 0 10px;
   cursor: pointer;
 }

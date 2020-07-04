@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 前台商品模块
+ */
 @RestController
 @RequestMapping(value = "/product")
 public class productController {
@@ -119,7 +122,7 @@ public class productController {
      * @return
      */
     @RequestMapping(value = "/selectMyProductById",method = RequestMethod.GET)
-    public List<Product> selectMyProductById(int id){
+    public List<Map<String,Object>> selectMyProductById(int id){
         return proservice.selectMyProductById(id);
     }
 
@@ -143,8 +146,50 @@ public class productController {
         return proservice.deleteProductById(id);
     }
 
+    /**
+     * 取消收藏
+     * @param param
+     * @return
+     */
     @RequestMapping(value = "/deleteProductToLove",method = RequestMethod.POST)
     public int deleteProductToLove(@RequestBody Map<String, Object> param){
         return proservice.deleteProductToLove(param);
+    }
+
+    /**
+     * 修改评论
+     * @param param
+     * @return
+     */
+    @RequestMapping(value = "/updateCommentById",method = RequestMethod.POST)
+    public int updateCommentById(@RequestBody Map<String, Object> param){
+        return proservice.updateCommentById(param);
+    }
+
+    /**
+     * 下架商品
+     * @return
+     */
+    @RequestMapping(value = "/soldOutProduct",method = RequestMethod.GET)
+    public int soldOutProduct(){
+        return proservice.soldOutProduct();
+    }
+
+    /**
+     * 商品推荐列表
+     */
+    @RequestMapping(value = "/selectByCommend",method = RequestMethod.GET)
+    public List<Product> selectByCommend(){
+        return proservice.selectByCommend();
+    }
+
+    /**
+     * 修改订单商品状态
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/updateOrderProductStatus",method = RequestMethod.POST)
+    public int updateOrderProductStatus(@RequestBody Map<String,Object> map){
+        return proservice.updateOrderProductStatus(map);
     }
 }

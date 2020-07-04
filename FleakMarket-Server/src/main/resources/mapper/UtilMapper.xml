@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.ForegroundMapper.UtilMapper">
+    <select id="selectDateFromStatis" parameterType="map" resultType="map">
+        select * from statisData where dates = #{dates};
+    </select>
+
+    <insert id="insertDateInStatis" parameterType="map">
+        insert into statisData(dates,clickNum,visitNum) values(#{dates},1,1);
+    </insert>
+
+    <update id="updateNumInStatis" parameterType="map">
+        update statisData
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clickNum!=null">
+                clickNum=#{clickNum},
+            </if>
+            <if test="visitNum!=null">
+                visitNum=#{visitNum},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+
+
+
+
+    <select id="selectProductNum" resultType="Integer">
+        select ifnull(count(*),0) from product;
+    </select>
+    <select id="selectProductSevenNum" resultType="Integer">
+        select ifnull(count(*),0) from product where DATE_SUB(CURDATE(),INTERVAL 7 DAY)&lt;=date(creattime);
+    </select>
+
+
+
+
+    <select id="selectUserNum" resultType="Integer">
+        select ifnull(count(*),0) from user;
+    </select>
+    <select id="selectUserMoonNum" resultType="Integer">
+        select ifnull(count(*),0) from user where DATE_SUB(CURDATE(),INTERVAL 30 DAY);
+    </select>
+
+
+
+
+    <select id="selectOrderNum" resultType="Integer">
+        select ifnull(count(*),0) from orders;
+    </select>
+    <select id="selectOrderSevenNum" resultType="Integer">
+        select ifnull(count(*),0) from orders where DATE_SUB(CURDATE(),INTERVAL 30 DAY)&lt;=date(createtime);
+    </select>
+
+
+
+
+    <select id="selectCommentNum" resultType="Integer">
+        select ifnull(count(*),0) from comment;
+    </select>
+    <select id="selectCommentSevenNum" resultType="Integer">
+        select ifnull(count(*),0) from comment where DATE_SUB(CURDATE(),INTERVAL 30 DAY)&lt;=date(time);
+    </select>
+
+
+
+
+    <select id="selectMoneyNum" resultType="Integer">
+        select  ifnull(sum(producttotal),0) producttotal from orders;
+    </select>
+    <select id="selectMoneyMoonNum" resultType="Integer">
+        select ifnull(sum(producttotal),0) producttotal from orders where DATE_SUB(CURDATE(),INTERVAL 30 DAY)&lt;=date(createtime);
+    </select>
+
+
+
+    <select id="selectProductNumByFcid" resultType="Integer">
+        select count(p.id),f.name fname from fc f,sc s
+            left join product p on p.sid=s.id
+            where f.id=s.fcid
+            GROUP BY f.id;
+    </select>
+
+    <select id="selectProductMoneyByFcid" resultType="Integer">
+        select sum(case when op.oid is null then 0 else p.currentprice end),f.name from fc f,sc s
+            left join product p on p.sid=s.id
+            left join order_product op on op.pid=p.id
+            where f.id=s.fcid
+            GROUP BY f.id;
+    </select>
+
+    <select id="selectClickNum" parameterType="String" resultType="map">
+        select  sum(case when  DATE_FORMAT(dates,'%c')=1 then clickNum else 0 end) as '1',
+                sum(case when  DATE_FORMAT(dates,'%c')=2 then clickNum else 0 end) as '2',
+                sum(case when  DATE_FORMAT(dates,'%c')=3 then clickNum else 0 end) as '3',
+                sum(case when  DATE_FORMAT(dates,'%c')=4 then clickNum else 0 end) as '4',
+                sum(case when  DATE_FORMAT(dates,'%c')=5 then clickNum else 0 end) as '5',
+                sum(case when  DATE_FORMAT(dates,'%c')=6 then clickNum else 0 end) as '6',
+                sum(case when  DATE_FORMAT(dates,'%c')=7 then clickNum else 0 end) as '7',
+                sum(case when  DATE_FORMAT(dates,'%c')=8 then clickNum else 0 end) as '8',
+                sum(case when  DATE_FORMAT(dates,'%c')=9 then clickNum else 0 end) as '9',
+                sum(case when  DATE_FORMAT(dates,'%c')=10 then clickNum else 0 end) as '10',
+                sum(case when  DATE_FORMAT(dates,'%c')=11 then clickNum else 0 end) as '11',
+                sum(case when  DATE_FORMAT(dates,'%c')=12 then clickNum else 0 end) as '12'
+            from statisData
+        where DATE_FORMAT(dates,'%Y')=#{value}
+    </select>
+    <select id="selectVisitNum" parameterType="String" resultType="map">
+        select  sum(case when  DATE_FORMAT(dates,'%c')=1 then visitNum else 0 end) as '1',
+                sum(case when  DATE_FORMAT(dates,'%c')=2 then visitNum else 0 end) as '2',
+                sum(case when  DATE_FORMAT(dates,'%c')=3 then visitNum else 0 end) as '3',
+                sum(case when  DATE_FORMAT(dates,'%c')=4 then visitNum else 0 end) as '4',
+                sum(case when  DATE_FORMAT(dates,'%c')=5 then visitNum else 0 end) as '5',
+                sum(case when  DATE_FORMAT(dates,'%c')=6 then visitNum else 0 end) as '6',
+                sum(case when  DATE_FORMAT(dates,'%c')=7 then visitNum else 0 end) as '7',
+                sum(case when  DATE_FORMAT(dates,'%c')=8 then visitNum else 0 end) as '8',
+                sum(case when  DATE_FORMAT(dates,'%c')=9 then visitNum else 0 end) as '9',
+                sum(case when  DATE_FORMAT(dates,'%c')=10 then visitNum else 0 end) as '10',
+                sum(case when  DATE_FORMAT(dates,'%c')=11 then visitNum else 0 end) as '11',
+                sum(case when  DATE_FORMAT(dates,'%c')=12 then visitNum else 0 end) as '12'
+            from statisData
+        where DATE_FORMAT(dates,'%Y')=#{value}
+    </select>
+
+    <delete id="deleteOrderByPay">
+        DELETE orders FROM orders,order_product WHERE orders.oid = order_product.oid AND orders.pay = 1 AND orders.createtime &lt;= DATE( DATE_SUB( CURDATE( ), INTERVAL 30 MINUTE ) );
+    </delete>
+</mapper>

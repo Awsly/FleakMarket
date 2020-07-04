@@ -8,6 +8,18 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 1000MB
+  mail:
+    host: smtp.163.com
+    port: 25
+    username: t18713827231@163.com
+    password: RWNKORILLAUDXFJE
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        #显示邮件发送信息
+        #debug: true
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml

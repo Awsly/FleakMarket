@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.ForegroundMapper.EmailMapper" >
+   <select id="selectProductDetail" parameterType="Map" resultType="Map">
+        select p.*,u.mail from product p,user u where p.uid=u.id and p.id in
+       <foreach collection="pids" index="index" item="item" open="(" separator="," close=")">
+           #{item}
+       </foreach>
+   </select>
+
+    <select id="selectProductDetailByOrder" parameterType="Map" resultType="Map">
+        select p.*,u.mail from product p,user u,orders o,order_product op where p.id=op.pid and o.oid=op.oid and o.createperson=u.username and p.id=#{pid} and o.oid=#{oid}
+    </select>
+</mapper>

@@ -3,11 +3,11 @@
 <mapper namespace="com.ct.mapper.ForegroundMapper.ProductMapper" >
 
     <select id="selectByNew" resultType="Product">
-        select * from product where DATE_SUB(CURDATE(),INTERVAL 7 DAY) and status=0;
+        select * from product where DATE_SUB(CURDATE(),INTERVAL 7 DAY) and status=1 order By creattime desc;
     </select>
 
     <select id="selectByHot" parameterType="Integer" resultType="Product">
-        select * from product where status=0
+        select * from product where status=1
         <if test="value == 1">
             and sid in (2)
         </if >
@@ -27,7 +27,13 @@
     </select>
 
     <select id="selectScProductById" parameterType="Map" resultType="Product">
-        select p.* from product p,fc f,sc s where p.sid=s.id and s.fcid=f.id and s.fcid=#{id} and status=0
+        select p.* from product p,fc f,sc s where p.sid=s.id and s.fcid=f.id and status=1
+        <if test="id!=0">
+            and s.fcid=#{id}
+        </if>
+        <if test="serachText!=null">
+            and p.name like concat('%','${serachText}','%')
+        </if>
         <if test="ids!=null and ids.size()>0">
             and s.id in
             <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
@@ -37,8 +43,8 @@
         <if test="priceInterval!=null and priceInterval.size()>0">
             and  currentprice BETWEEN ${priceInterval.min} and ${priceInterval.max}
         </if>
-        <if test="timeInterval!=null and timeInterval.size()>0">
-           and  creattime BETWEEN '${timeInterval.min}' and '${timeInterval.max}'
+        <if test="timeInterval!=0">
+           and  DATE_SUB(CURDATE(),INTERVAL #{timeInterval} DAY);
         </if>
     </select>
 
@@ -128,8 +134,8 @@
         )
     </insert>
 
-    <select id="selectCommentById" resultType="java.util.HashMap" parameterType="Integer">
-        select u.id,u.username,u.userimgpath,c.time,c.text from comment c,user u where c.uid=u.id and c.pid=#{value};
+    <select id="selectCommentById" resultType="map" parameterType="Integer">
+        select u.id uid,u.username,u.userimgpath,c.* from comment c,user u where c.uid=u.id and c.pid=#{value}  order by c.id desc;
     </select>
 
     <insert id="insertProductToLove" parameterType="map">
@@ -148,8 +154,8 @@
         select p.* from userlove u,product p where u.pid=p.id and u.uid=#{value}
     </select>
 
-    <select id="selectMyProductById" resultType="Product" parameterType="Integer">
-        select * from product where uid=#{value}
+    <select id="selectMyProductById" resultType="map" parameterType="Integer">
+        select p.*,ifnull(op.status,0) opstatus,op.oid oid from product p left join order_product op on op.pid=p.id where  uid=#{value} order by creattime desc
     </select>
 
     <update id="updateProductByUser" parameterType="Product">
@@ -179,6 +185,12 @@
             <if test="images!=null">
                 images=#{images},
             </if>
+            <if test="clicks!=0">
+                clicks=#{clicks},
+            </if>
+            <if test="comments!=null">
+                comments=#{comments},
+            </if>
             <if test="status!=null">
                 status=#{status},
             </if>
@@ -193,4 +205,20 @@
     <delete id="deleteProductToLove" parameterType="map">
         delete from userlove where uid=#{uid} and pid=#{pid}
     </delete>
+
+    <update id="updateCommentById" parameterType="map">
+        update comment set status=#{status} where id=#{id}
+    </update>
+
+    <update id="soldOutProduct">
+        update product p,order_product op set p.status=2,p.payed=2 where p.id=op.pid;
+    </update>
+
+    <select id="selectByCommend" resultType="Product">
+        select p.* from recommend r,product p where r.pid=p.id and p.status=1 order by creattime desc;
+    </select>
+
+    <update id="updateOrderProductStatus" parameterType="map">
+        update order_product set status=#{status} where oid=#{oid} and pid=#{pid};
+    </update>
 </mapper>

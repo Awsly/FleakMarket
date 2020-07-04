@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 前台分类模块接口
+ */
 @RestController
 @RequestMapping(value = "/classify")
 public class classifyControlloer {
@@ -61,5 +64,14 @@ public class classifyControlloer {
     @RequestMapping(value = "/selectScById",method = RequestMethod.GET)
     public Sc selectScById(int id){
         return classifyService.selectScById(id);
+    }
+
+    /**
+     * 查询二级分类列表
+     * @return
+     */
+    @RequestMapping(value = "/selectScList",method = RequestMethod.GET)
+    public List<Sc> selectScList(){
+        return classifyService.selectScList();
     }
 }

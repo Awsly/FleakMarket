@@ -10,7 +10,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import moment from 'moment';
 
 axios.defaults.baseURL = '/api';
-axios.defaults.timeout = 9000;
+axios.defaults.timeout = 60000;
 
 Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;

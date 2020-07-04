@@ -16,9 +16,12 @@
           <el-tab-pane label="我的商品" name="我的商品">
             <Myproduct></Myproduct>
           </el-tab-pane>
-          <!-- <el-tab-pane label="我的购物车" name="我的购物车">
+          <el-tab-pane label="我的订单" name="我的订单">
+            <Myorder></Myorder>
+          </el-tab-pane>
+          <el-tab-pane label="我的购物车" name="我的购物车">
             <Mycart></Mycart>
-          </el-tab-pane> -->
+          </el-tab-pane>
         </el-tabs>
       </el-col>
     </el-row>
@@ -28,12 +31,15 @@
 <script>
   import Search from "@/components/Search.vue";
   import FooterBottom from "@/components/Footer.vue";
+  import moment from "moment";
 
   import Myaccount from "@/components/User/Myaccount.vue";
   import Myissue from "@/components/User/Myissue.vue";
   import Mycollect from "@/components/User/Mycollect.vue";
   import Myproduct from "@/components/User/Myproduct.vue";
+  import Myorder from "@/components/User/Myorder.vue";
   import Mycart from "@/components/User/Mycart.vue";
+  
 
   export default {
     components: {
@@ -43,6 +49,7 @@
       Myissue,//我的发布
       Mycollect,//我的收藏
       Myproduct,//我的商品
+      Myorder,//我的订单
       Mycart//我的购物车
     },
     data() {
@@ -51,13 +58,17 @@
       }
     },
     created() {
-
-    },
-    methods: {
-
+      if(this.$store.state.userid == 0){
+        this.$router.push({
+          name: 'login',
+          query: {
+            name: 'login'
+          },
+        });
+      }
     }
   }
 </script>
-<style scoped>
+<style>
 
 </style>

@@ -9,6 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+/**
+ * 文件上传接口
+ */
 @RestController
 @RequestMapping(value = "/fileUpload")
 public class FileuploadController {

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.BackgroundMapper.BProductMapper" >
+    <select id="selectProductList" parameterType="Product" resultType="map">
+        select p.*,s.name sname,ifnull(r.pid,0)  pid from product p left JOIN recommend r on p.id=r.pid left JOIN sc s on p.sid=s.id where 1=1
+        <if test="name != null">
+            and p.name like concat('%','${name}','%')
+        </if>
+        <if test="sid != 0">
+            and p.sid=#{sid}
+        </if>
+        <if test="deal!=null">
+            and p.deal=#{deal}
+        </if>
+        <if test="status!=null">
+            and p.status=#{status}
+        </if>
+    </select>
+
+    <insert id="insertRecommendByPid" parameterType="String">
+        insert into recommend(pid) values(#{value});
+    </insert>
+
+    <delete id="deleteRecommendByPid" parameterType="String">
+        delete from recommend where pid=#{value};
+    </delete>
+
+    <select id="selectProductCommentList" parameterType="Product" resultType="map">
+        select p.*,s.name sname,ifnull(r.pid,0)  pid from product p left JOIN recommend r on p.id=r.pid left JOIN sc s on p.sid=s.id where p.comments!=0
+        <if test="name != null">
+            and p.name like concat('%','${name}','%')
+        </if>
+        <if test="sid != 0">
+            and p.sid=#{sid}
+        </if>
+        <if test="deal!=null">
+            and p.deal=#{deal}
+        </if>
+        <if test="status!=null">
+            and p.status=#{status}
+        </if>
+    </select>
+</mapper>

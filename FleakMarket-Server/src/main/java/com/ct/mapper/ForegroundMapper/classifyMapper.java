@@ -19,4 +19,6 @@ public interface classifyMapper {
     List<Map<String,Object>> selectFcScByList();
     //二级分类对象接口
     Sc selectScById(int id);
+    //二级分类列表
+    List<Sc> selectScList();
 }

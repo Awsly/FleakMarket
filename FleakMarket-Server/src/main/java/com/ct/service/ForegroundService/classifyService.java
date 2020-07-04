@@ -33,4 +33,8 @@ public class classifyService {
     public Sc selectScById(int id) {
         return classifyMapper.selectScById(id);
     }
+
+    public List<Sc> selectScList() {
+        return classifyMapper.selectScList();
+    }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.ForegroundMapper.CartMapper" >
+    <select id="selectCartById" parameterType="Integer" resultType="Product">
+        select p.* from product p,usercart c where p.id=c.pid and c.uid=#{value}
+    </select>
+
+    <delete id="deleteProductByArray" parameterType="map">
+        delete from usercart where uid=#{uid} and pid in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="selectCartProductById" parameterType="map" resultType="int">
+        select count(*) from usercart where uid=#{uid} and pid=#{pid}
+    </select>
+
+    <insert id="insertCartById" parameterType="map">
+        insert into usercart(uid,pid) values(#{uid},#{pid});
+    </insert>
+</mapper>

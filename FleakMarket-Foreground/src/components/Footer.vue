@@ -1,10 +1,10 @@
 <template>
   <div class="Footer">
      <el-row class="row-info">
-         <el-col :span="4" :offset="4" style="border: 0;"><span>联系我们</span></el-col>
-         <el-col :span="4"><span>关于网站</span></el-col>
-         <el-col :span="4"><span>隐私声明</span></el-col>
-         <el-col :span="4"><span>意见反馈</span></el-col>
+         <el-col :span="4" :offset="4" style="border: 0;"><span @click="message('联系我们','E-mail:2459550727@qq.com')">联系我们</span></el-col>
+         <el-col :span="4"><span @click="message('关于网站','唐院二手交易市场是一个服务于全体唐院师生的二手商品交易网站。')">关于网站</span></el-col>
+         <el-col :span="4"><span @click="message('隐私声明','本站承诺不会主动泄露任何个人隐私')">隐私声明</span></el-col>
+         <el-col :span="4"><span @click="message('意见反馈','QQ群：1029633796')">意见反馈</span></el-col>
      </el-row>
       <el-row>
         <el-col style="border-bottom: 1px solid #E7E7E7;" :span="16" :offset="4"></el-col>
@@ -48,6 +48,26 @@
 </template>
 
 <script>
+  export default {
+    data() {
+      return {
+
+      }
+    },
+    created() {
+
+    },
+    methods:{
+      message(title,message){
+        this.$notify({
+          title: title,
+          message: message,
+          position: 'bottom-right'
+        });
+      }
+    }
+  }
+
 </script>
 
 <style scoped="scoped">

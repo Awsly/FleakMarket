@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.ForegroundMapper.OrderMapper" >
+    <insert id="insertOrderByOrder" parameterType="Order">
+        insert into orders(oid,cid,createperson,createtime,productnumber,producttotal,consignee,phone,mail,address
+        <if test="remark!=null and remark!=''">
+            ,remark
+        </if>
+        )
+        value(#{oid},#{cid},#{createperson},#{createtime},#{productnumber},#{producttotal},#{consignee},#{phone},#{mail},#{address}
+        <if test="remark!=null and remark!=''">
+            ,#{remark}
+        </if>
+        )
+    </insert>
+
+    <insert id="insertOrderProduct" parameterType="list">
+        insert into order_product(oid,pid) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.oid},#{item.pid})
+        </foreach>
+    </insert>
+
+    <resultMap id="resultOrderMap" type="Order">
+        <result property="id" column="id" />
+        <result property="oid" column="oid" />
+        <result property="cid" column="cid" />
+        <result property="createperson" column="createperson" />
+        <result property="createtime" column="createtime" />
+        <result property="pay" column="pay" />
+        <result property="paytime" column="paytime" />
+        <result property="productnumber" column="productnumber" />
+        <result property="producttotal" column="producttotal" />
+        <result property="consignee" column="consignee" />
+        <result property="phone" column="phone" />
+        <result property="mail" column="mail" />
+        <result property="address" column="address" />
+        <result property="remark" column="remark" />
+        <result property="status" column="status" />
+        
+        <collection property="products" ofType="Product" column="pid">
+            <id property="id" column="pid" javaType="int" jdbcType="INTEGER" />
+            <result property="name" column="name" javaType="string" jdbcType="VARCHAR" />
+            <result property="details" column="details" javaType="string" jdbcType="VARCHAR" />
+            <result property="images" column="images" javaType="string" jdbcType="VARCHAR" />
+            <result property="currentprice" column="currentprice" javaType="string" jdbcType="VARCHAR" />
+        </collection>
+    </resultMap>
+    <select id="selectOrderById" parameterType="String" resultMap="resultOrderMap">
+        select o.*,p.id pid,p.name,p.details,p.images,p.currentprice from orders o,product p,order_product op where
+        o.oid = op.oid and p.id = op.pid and o.oid = #{value}
+    </select>
+
+    <update id="updateOrderByOid" parameterType="Order">
+        update orders
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pay!=null and pay!=''">
+                pay=#{pay},
+            </if>
+            <if test="paytime!=null and paytime!=''">
+                paytime=#{paytime},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="address!=null and address!=''">
+                address=#{address},
+            </if>
+        </trim>
+        where oid=#{oid}
+    </update>
+
+    <delete id="deleteOrderByOid" parameterType="Order">
+        delete from orders where oid=#{oid};
+        delete from order_product where oid=#{oid};
+    </delete>
+
+    <select id="selectOrderByUserId" parameterType="Integer" resultType="Order">
+        select o.* from orders o,user u where o.createperson=u.username and u.id=#{value} order by o.createtime desc;
+    </select>
+
+    <select id="selectOrderByList" resultType="Order">
+        select * from orders where 1=1
+        <if test="oid!=null">
+            and oid like concat('%','${oid}','%')
+        </if>
+        <if test="pay!=null">
+            and pay=#{pay}
+        </if>
+        <if test="phone!=null">
+            and phone=#{phone}
+        </if>
+    </select>
+
+    <select id="selectOrderProductByUserId" parameterType="Integer" resultType="map">
+        select
+            p.*,op.status opstatus,u.username,o.oid
+        from
+            order_product op,product p,orders o,user u
+        where
+            op.pid=p.id
+        and
+            op.oid=o.oid
+        and
+            o.createperson=u.username
+        and
+            u.id=#{value}
+        order by
+            o.createtime
+        desc;
+    </select>
+
+    <update id="updateOrderById" parameterType="map">
+        update order_product set status=#{status} where pid=#{pid} and oid=#{oid};
+    </update>
+</mapper>

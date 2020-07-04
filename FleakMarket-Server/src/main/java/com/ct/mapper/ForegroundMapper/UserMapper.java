@@ -15,4 +15,18 @@ public interface UserMapper {
     int updateUserById(User user);
     //通过id查询用户发布商品数量
     int selectCountById(Integer id);
+    //通过id删除用户信息
+    int deleteUserById(Integer id);
+    //重置账户
+    int restAccountById(Integer id);
+    //用户注册
+    int insertUserInfo(User user);
+    //插入用户账户信息到账户表中
+    int insertUserToAccount(Account account);
+    //通过id查询用户购物车商品数量
+    int selectCartCountById(int id);
+    //通过id查询用户发布评论数量
+    int selectCommentById(int id);
+    //通过id查询账户信息
+    Account selectAccountById(int id);
 }

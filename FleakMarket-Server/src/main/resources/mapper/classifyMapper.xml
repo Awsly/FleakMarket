@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ct.mapper.ForegroundMapper.classifyMapper" >
     <select id="selectAllclass" resultType="Fc">
-        select * from fc;
+        select * from fc order by id;
     </select>
 
     <select id="selectListScById" parameterType="Integer" resultType="Sc">
@@ -19,5 +19,9 @@
 
     <select id="selectScById" resultType="Sc">
         select * from sc where id=#{value}
+    </select>
+
+    <select id="selectScList" resultType="Sc">
+        select * from sc;
     </select>
 </mapper>

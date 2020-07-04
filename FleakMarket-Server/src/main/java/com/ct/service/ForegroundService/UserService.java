@@ -38,4 +38,33 @@ public class UserService {
         }
         return usermapper.selectCountById(id);
     }
+
+    public int deleteUserById(Integer id) {
+        return usermapper.deleteUserById(id);
+    }
+
+    public int restAccountById(Integer id) {
+        return usermapper.restAccountById(id);
+    }
+
+    public int insertUserInfo(User user) {
+        usermapper.insertUserInfo(user);
+        return user.getId();
+    }
+
+    public int insertUserToAccount(Account account) {
+        return usermapper.insertUserToAccount(account);
+    }
+
+    public int selectCartCountById(int id) {
+        return usermapper.selectCartCountById(id);
+    }
+
+    public int selectCommentById(int id) {
+        return usermapper.selectCommentById(id);
+    }
+
+    public Account selectAccountById(int id) {
+        return usermapper.selectAccountById(id);
+    }
 }

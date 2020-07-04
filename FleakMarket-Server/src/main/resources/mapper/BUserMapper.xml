@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ct.mapper.BackgroundMapper.BUserMapper" >
+    <select id="selectUserList" parameterType="User" resultType="map">
+        select u.*,a.username uname from user u,account a where u.id=a.userid
+        <if test="username != null">
+            and u.username like concat('%','${username}','%')
+        </if>
+        <if test="sex != null">
+            and u.sex=#{sex}
+        </if>
+        <if test="phonenumber != null">
+            and u.phonenumber like concat('%','${phonenumber}','%')
+        </if>
+    </select>
+</mapper>

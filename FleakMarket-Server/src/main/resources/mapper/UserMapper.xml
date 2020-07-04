@@ -17,17 +17,68 @@
   <update id="updateUserById" parameterType="User">
     update user
     <trim prefix="set" suffixOverrides=",">
-      <if test="id!=null">id=#{id},</if>
       <if test="username!=null">username=#{username},</if>
+      <if test="userimgpath!=null">userimgpath=#{userimgpath},</if>
       <if test="phonenumber!=null">phonenumber=#{phonenumber},</if>
       <if test="mail!=null">mail=#{mail},</if>
+      <if test="birthday!=null">birthday=#{birthday},</if>
       <if test="address!=null">address=#{address},</if>
       <if test="sex!=null">sex=#{sex},</if>
-      <if test="signature!=null">signature=#{signature},</if>
     </trim>
     WHERE id=#{id}
   </update>
   <select id="selectCountById" parameterType="Integer" resultType="Integer">
     select count(*) from product where uid = #{value}
   </select>
+
+  <delete id="deleteUserById" parameterType="Integer">
+    delete from user where id=#{value};
+    delete from account where userid=#{value};
+  </delete>
+
+  <update id="restAccountById" parameterType="Integer">
+    update account set password='123456' where userid=#{value}
+  </update>
+
+  <insert id="insertUserInfo" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+    insert into user(username,phonenumber,mail,birthday,address,sex) values(
+      <trim prefix="" suffixOverrides=",">
+        <if test="username!=null">
+          #{username},
+        </if>
+        <if test="phonenumber!=null">
+          #{phonenumber},
+        </if>
+        <if test="mail!=null">
+          #{mail},
+        </if>
+        <if test="birthday!=null">
+          #{birthday},
+        </if>
+        <if test="address!=null">
+          #{address},
+        </if>
+        <if test="sex!=null">
+          #{sex},
+        </if>
+      </trim>
+    )
+  </insert>
+
+  <insert id="insertUserToAccount" parameterType="Account">
+    insert into account(userid,username,password) values(#{userid},#{username},#{password});
+  </insert>
+
+  <select id="selectCartCountById" parameterType="Integer" resultType="Integer">
+    select count(productnumber) from orders o,user u where o.createperson=u.username and u.id=#{value};
+  </select>
+
+  <select id="selectCommentById" parameterType="Integer" resultType="Integer">
+    select count(*) from comment where uid=#{value};
+  </select>
+
+  <select id="selectAccountById" parameterType="Integer" resultType="Account">
+    select * from account where userid=#{value}
+  </select>
+
 </mapper>

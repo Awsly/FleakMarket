@@ -1,12 +1,24 @@
 <template>
   <div class="container">
+    <el-row v-if="userlove.length==0">
+      <el-col :span="22" class="noData">
+      </el-col>
+    </el-row>
     <el-row class="typeProduct">
       <el-col :span="24">
         <ul>
           <li v-for="item in userlove">
             <div class="imgbox" @click="gotoDetails(item.id)"><img :src="item.images[0]"></div>
             <p class="productPrice">¥<span class="price">{{item.currentprice}}</span> </p>
-            <p class="productName" @click="gotoDetails(item.id)">{{item.name}} <span style="float: right;font-size: 12px;" v-if="item.status == 1">已下架</span> </p>
+            <!-- <p class="productName" @click="gotoDetails(item.id)"><span style="flex: 3">{{item.name}}</span> <span style="flex:1;float: right;font-size: 12px;" v-if="item.status == 1">已下架</span> </p> -->
+            <el-row>
+              <el-col :span="17" :offset="1">
+                <div class="productName">{{item.name}}</div>
+              </el-col>
+              <el-col :span="4" :offset="1">
+                <span style="font-size: 12px;" v-if="item.status == '2'">已下架</span>
+              </el-col>
+            </el-row>
             <div class="userPlay">
               <span>评价 {{item.comments}}</span>
               <span><button @click="deleteLove(item.id)">取消收藏</button></span>
@@ -19,6 +31,7 @@
 </template>
 
 <script>
+  import moment from "moment";
   export default{
     data(){
       return {
@@ -80,8 +93,28 @@
             message: '删除取消'
           });
         })
-
       },
+       //统计点击量
+       clickNum(){
+         //判断数据库中是否存在当前日期
+         this.$axios.post('/utils/selectDateFromStatis',{
+           dates: moment().format('YYYY-MM-DD')
+         }).then(res => {
+           if(res.data.length == 0){
+             //如果数据库不存在今天的数据，插入今天日期与默认点击量
+             this.$axios.post('/utils/insertDateInStatis',{
+               dates: moment().format('YYYY-MM-DD'),
+             });
+           }else{
+             //如果数据库存在今天的数据，获取当日点击量+1
+             this.$axios.post('/utils/updateNumInStatis',{
+               id: res.data.id,
+               visitNum: res.data.visitNum,
+               clickNum: (res.data.clickNum+1)
+             });
+           }
+         });
+       }
     }
   }
 </script>
@@ -89,7 +122,7 @@
 <style scoped="scoped">
   .container{
     width: 95%;
-    min-height: 500px;
+    min-height: 540px;
     margin: auto;
     color: #777;
     padding: 0 20px;
@@ -147,6 +180,9 @@
     color: #555555;
     font-size: 14px;
     cursor: pointer;
+    overflow: hidden;/*超出部分隐藏*/
+    text-overflow:ellipsis;/* 超出部分显示省略号 */
+    white-space: nowrap;/*规定段落中的文本不进行换行 */
   }
   .userPlay{
     width: 100%;
@@ -164,5 +200,12 @@
     background-color: #FF5500;
     margin: 0 10px;
     cursor: pointer;
+  }
+  .noData{
+    text-align: center;
+    padding-top: 300px;
+    background-image: url(../../../static/img/noData/nodata05.png);
+    background-repeat:no-repeat;
+    background-position: center ;
   }
 </style>
