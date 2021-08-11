@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class AliPayConfig {
-    // 应用ID,您的APPID，收款账号既是您的APPID对应支付宝账号
+    // 应用ID,您的APPID，收款账号既是您的APPID对应支付宝账号66666666666666666
     public static String APP_ID = "2016102400751528";
 
     // 商户私钥，您的PKCS8格式RSA2私钥

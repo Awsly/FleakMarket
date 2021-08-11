@@ -14,7 +14,7 @@ class FleamarketApplicationTests {
     void testClientUtil() {
         FastDFSClient client = new FastDFSClient("D:\\WorkSpace\\CodeFile\\FleaMarket\\FleakMarket-Server\\src\\main\\resources\\fast_client.conf");
         String result = client.uploadFile("C:\\Users\\CHENTUO\\Pictures\\Camera Roll\\headerImg.jpg", "jpg");
-        System.out.println("路径是-->"+result);
+        System.out.println("路径是-->"+result66666666666666666);
     }
 
 }
