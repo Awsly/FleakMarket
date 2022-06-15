@@ -1,13 +1,6 @@
 package com.ct.service.ForegroundService;
 
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipayTradePagePayRequest;
-import com.alipay.api.response.AlipayTradePagePayResponse;
-import com.ct.config.AliPayConfig;
 import com.ct.mapper.ForegroundMapper.UtilMapper;
-import com.ct.model.ForegroundModel.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;

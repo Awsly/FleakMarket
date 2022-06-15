@@ -2,7 +2,7 @@
   <div class="container">
     <el-row class="header">
       <el-col :span="3" class="title">
-        唐院二手交易市场
+        校园二手交易市场
       </el-col>
       <el-col :span="18" class="func">
         <i class="el-icon-s-operation" @click="navigationBoolean"></i>
@@ -19,7 +19,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <span>
-           <a href="http://localhost:7777/#/" target="view_window" style="color: #FFFFFF;">前台首页</a>
+           <a href="http://localhost:81/#/" target="view_window" style="color: #FFFFFF;">前台首页</a>
         </span>
       </el-col>
     </el-row>
@@ -69,12 +69,12 @@
               :closable="true"
             >
             <div class="bodys">
-              <Account v-if="item.content == '1'"></Account>
-              <productManage v-if="item.content == '2'"></productManage>
-              <order v-if="item.content == '3'"></order>
-              <Comment v-if="item.content == '4'"></Comment>
-              <Adminstrator v-if="item.content == '5'"></Adminstrator>
-              <Statistics v-if="item.content == '6'"></Statistics>
+              <Account v-if="item.content === '1'"></Account>
+              <productManage v-if="item.content === '2'"></productManage>
+              <order v-if="item.content === '3'"></order>
+              <Comment v-if="item.content === '4'"></Comment>
+              <Adminstrator v-if="item.content === '5'"></Adminstrator>
+              <Statistics v-if="item.content === '6'"></Statistics>
             </div>
             </el-tab-pane>
           </el-tabs>
@@ -213,17 +213,17 @@
     methods: {
       //选择导航栏
       handleSelect(key, keyPath) {
-        if(key == '1'){
+        if(key === '1'){
           this.addTab("用户管理",'1');
-        }else if(key == '2'){
+        }else if(key === '2'){
           this.addTab("商品管理",'2');
-        }else if(key == '3'){
+        }else if(key === '3'){
           this.addTab("订单管理",'3');
-        }else if(key == '4'){
+        }else if(key === '4'){
           this.addTab("评价管理",'4');
-        }else if(key == '5'){
+        }else if(key === '5'){
           this.addTab("管理员管理",'5');
-        }else if(key == '6'){
+        }else if(key === '6'){
           this.addTab("网站数据统计",'6');
         }
       },
@@ -235,7 +235,7 @@
       addTab(targetName,index) {
         let newTabName = ++this.tabIndex + '';
         let search = this.editableTabs.find(item => item.content === index);
-        if(search==undefined){
+        if(search===undefined){
           this.editableTabs.push({
             title: targetName,
             name: index,

@@ -4,8 +4,8 @@
 }
 
 h2 {
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 0;
   margin-left: 5px;
   font-weight: 100;
   text-align-last: left;
@@ -29,12 +29,12 @@ h2 {
   display: flex;
   height: 40px;
   margin-top: 32px;
-  border: 3px solid rgba(255, 153, 0);
+  border: 3px solid rgba(255, 153, 0, 1);
 }
 
 .serach input {
   border: 0;
-  margin: 0px 5px;
+  margin: 0 5px;
   outline: none;
   width: 80%;
 }
@@ -64,7 +64,7 @@ h2 {
 .sortlist li {
   float: left;
   line-height: 50px;
-  margin: 0px 20px;
+  margin: 0 20px;
   font-size: 16px;
   color: #333;
   cursor: pointer;
@@ -79,7 +79,6 @@ h2 {
   padding: 10px 0;
 }
 .slideUl {
-  padding-bottom: 10px;
   height: 460px;
   position: absolute;
   z-index: 99999;
@@ -152,7 +151,7 @@ h2 {
   width: 47%;
   height: 280px;
   font-size: 15px;
-  margin: 0px 0.5%;
+  margin: 0 0.5%;
   margin-bottom: 0.5%;
   padding: 0 1%;
   border-radius: 15px;
@@ -166,7 +165,6 @@ h2 {
   font-size: 20px;
   font-weight: 600;
   padding: 3px 10px;
-  margin-left: 5px;
   margin: 7px;
   margin-top: 20px;
 }
@@ -211,36 +209,43 @@ h2 {
 }
 
 .typeProduct li{
-  width: calc(20% - 8px);
-  margin: 10px 4px;
-  height: 350px;
-  overflow: hidden;
+  width: calc(25% - 8px);
+  margin: 10px 2px;
   float: left;
-  border-radius: 10px;
-  transition: all 0.2s;
-  text-align: center;
-  text-align-last: left;
-  background-color: #FFFFFF;
-  box-shadow: 0 1px 4px #E0E0E0;
+  padding-bottom: 10px;
 }
-.typeProduct li:hover{
-  box-shadow: 0px 1px 10px #999999;
+
+.containerProduct{
+  width: 220px;
+  height: 300px;
+  margin: auto;
+  transition: all 0.2s;
+  border-radius: 5px;
+  box-shadow: 0 1px 5px #999999;
+  background-color: #fcfcfc;
+}
+.containerProduct:hover{
+  box-shadow: 0 1px 10px #999999;
   transform: translateY(-0.5%);
 }
+
 .typeProduct li .imgbox{
-    height: 66%;
-    padding: 10px;
+  width: 220px;
+  height: 200px;
+  overflow: hidden;
   }
 .typeProduct li img{
-  width: 100%;
-  height: 100%;
-  margin: auto;
+  width: 220px;
+  height: 200px;
+  background-repeat: no-repeat;
+  background-position:center center;
+  background-size: cover;
   cursor: pointer;
 }
 .typeProduct li p{
-  margin: 0;
   margin: 5px 10px;
   line-height: 20px;
+  text-align: left;
 }
 .productPrice{
   color: #FF5500;
@@ -250,9 +255,14 @@ h2 {
   font-size: 16px !important;
 }
 .productName{
+  height: 20px;
+  width: 80%;
   color: #555555;
   font-size: 14px;
   cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .userPlay{
   width: 100%;

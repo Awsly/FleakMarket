@@ -3,24 +3,28 @@
     <search></search>
     <el-row>
       <el-col :span="14" :offset="5">
-        <el-tabs tab-position="left" v-model="activeName" style="min-height: 515px;">
+        <el-tabs
+          tab-position="left"
+          v-model="activeName"
+          @tab-click="swithcTab"
+          style="min-height: 515px;">
           <el-tab-pane label="我的账户" name="我的账户">
-            <Myaccount></Myaccount>
+            <Myaccount v-if="activeTab===1"></Myaccount>
           </el-tab-pane>
           <el-tab-pane label="发布商品" name="发布商品">
-            <Myissue></Myissue>
+            <Myissue v-if="activeTab===2"></Myissue>
           </el-tab-pane>
           <el-tab-pane label="我的收藏" name="我的收藏">
-            <Mycollect></Mycollect>
+            <Mycollect v-if="activeTab===3"></Mycollect>
           </el-tab-pane>
           <el-tab-pane label="我的商品" name="我的商品">
-            <Myproduct></Myproduct>
+            <Myproduct v-if="activeTab===4"></Myproduct>
           </el-tab-pane>
           <el-tab-pane label="我的订单" name="我的订单">
-            <Myorder></Myorder>
+            <Myorder v-if="activeTab===5"></Myorder>
           </el-tab-pane>
           <el-tab-pane label="我的购物车" name="我的购物车">
-            <Mycart></Mycart>
+            <Mycart v-if="activeTab===6"></Mycart>
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -31,7 +35,6 @@
 <script>
   import Search from "@/components/Search.vue";
   import FooterBottom from "@/components/Footer.vue";
-  import moment from "moment";
 
   import Myaccount from "@/components/User/Myaccount.vue";
   import Myissue from "@/components/User/Myissue.vue";
@@ -39,7 +42,7 @@
   import Myproduct from "@/components/User/Myproduct.vue";
   import Myorder from "@/components/User/Myorder.vue";
   import Mycart from "@/components/User/Mycart.vue";
-  
+
 
   export default {
     components: {
@@ -55,16 +58,43 @@
     data() {
       return {
         activeName: "我的账户",//默认页
+        activeTab: 1
       }
     },
     created() {
-      if(this.$store.state.userid == 0){
+      if(this.$store.state.userid === 0){
         this.$router.push({
           name: 'login',
           query: {
             name: 'login'
           },
         });
+      }
+    },
+    methods: {
+      swithcTab(){
+        console.log("666",this.activeName);
+        switch (this.activeName){
+          case "我的账户":
+            this.activeTab = 1;
+            break;
+          case "发布商品":
+            this.activeTab = 2;
+            break;
+          case "我的收藏":
+            this.activeTab = 3;
+            break;
+          case "我的商品":
+            this.activeTab = 4;
+            break;
+          case "我的订单":
+            this.activeTab = 5;
+            break;
+          case "我的购物车":
+            this.activeTab = 6;
+            break;
+
+        }
       }
     }
   }

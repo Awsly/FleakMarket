@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <el-row>
-      <el-col :span="8" :offset="4">欢迎来到唐山学院二手交易市场</el-col>
+      <el-col :span="8" :offset="4">欢迎来到在线二手商品交易网</el-col>
       <el-col :span="5" :offset="6">
         <div class="lore">
           <el-link :underline="false" href="/">首页</el-link>|

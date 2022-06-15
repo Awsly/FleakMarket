@@ -1,11 +1,5 @@
 package com.ct.controller.ForegroundController;
 
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipayTradePagePayRequest;
-import com.alipay.api.response.AlipayTradePagePayResponse;
-import com.ct.config.AliPayConfig;
 import com.ct.model.ForegroundModel.Order;
 import com.ct.service.ForegroundService.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,49 +98,4 @@ public class UtilController {
         return service.selectVisitNum(year);
     }
 
-    /**
-     * 订单支付接口
-     * @param
-     * @return
-     */
-    @RequestMapping(value = "/orderPay",method = RequestMethod.GET)
-    public String orderPay(Order order) throws AlipayApiException {
-        //获得初始化的AlipayClient
-        AlipayClient alipayClient = new DefaultAlipayClient(
-                AliPayConfig.gatewayUrl,
-                AliPayConfig.APP_ID,
-                AliPayConfig.APP_PRIVATE_KEY,
-                "json",
-                AliPayConfig.CHARSET,
-                AliPayConfig.ALIPAY_PUBLIC_KEY,
-                AliPayConfig.sign_type
-        );
-
-
-        //设置请求参数
-        AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
-
-
-        request.setReturnUrl(AliPayConfig.return_url);
-        request.setNotifyUrl(AliPayConfig.notify_url); //在公共参数中设置回跳和通知地址
-
-        //商户订单号，商户网站订单系统中唯一订单号，必填
-        String out_trade_no = order.getOid();
-        //付款金额，必填
-        String total_amount =order.getProducttotal();
-        //订单名称，必填
-        String subject = "唐院二手交易平台";
-        //商品描述，可空
-        String body = order.getRemark();
-
-        request.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\","
-                + "\"total_amount\":\""+ total_amount +"\","
-                + "\"subject\":\""+ subject +"\","
-                + "\"body\":\""+ body +"\","
-                + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
-
-        AlipayTradePagePayResponse response = alipayClient.pageExecute(request);
-
-        return response.getBody();
-    }
 }

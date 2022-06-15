@@ -27,7 +27,7 @@
 
 
         <el-tab-pane label="已支付" name="已支付">
-          <el-row class="myOrderContainer" v-for="item in payedData" v-if="item.pay==2">
+          <el-row class="myOrderContainer" v-for="item in payedData" v-if="item.pay==2" :key="item.oid">
           	<el-col :span="11">
           		<div class="proName">订单编号: {{item.oid}}</div>
           		<div class="proDetail">创建日期: {{item.createtime}}</div>

@@ -46,22 +46,24 @@
     </el-row>
 
 
-    <el-divider v-if="this.newpro!=''"></el-divider>
+    <el-divider v-if="this.newpro!==''"></el-divider>
     <!-- 最新上架-->
-    <el-row class="new" v-if="this.newpro!=''">
+    <el-row class="new" v-if="this.newpro!==''">
       <el-col :span="4" :offset="4">
         <h2>最新上架</h2>
       </el-col>
       <el-col class="center" :span="16" :offset="4">
         <ul class="typeProduct">
           <li v-for="item in newpro" :key="item.id">
-            <div class="imgbox"><img :src="item.images[0]" :width="imgwidth" :alt="item.name" @click="gotoDetails(item.id)"></div>
-            <div class="text" style="position: relative;bottom: 0;height: 50px;">
-              <p class="productPrice">¥<span class="price">{{item.currentprice}}</span> </p>
-              <p class="productName" @click="gotoDetails(item.id)">{{item.name}}</p>
-              <div class="userPlay">
-                <span style="font-size: 12px;color:#bbbcc2;">{{item.creattime}}</span>
-                <span><button @click="addLove(item.id,item.uid)">点击收藏</button></span>
+            <div class="containerProduct">
+              <div class="imgbox"><img :src="item.images[0]" :width="imgwidth" :alt="item.name" @click="gotoDetails(item.id)"></div>
+              <div class="text" style="position: relative;bottom: 0;height: 50px;">
+                <p class="productPrice">¥<span class="price">{{item.currentprice}}</span> </p>
+                <p class="productName" @click="gotoDetails(item.id)">{{item.name}}</p>
+                <div class="userPlay">
+                  <span style="font-size: 12px;color:#bbbcc2;">{{item.creattime}}</span>
+                  <span><button @click="addLove(item.id,item.uid)">点击收藏</button></span>
+                </div>
               </div>
             </div>
           </li>
@@ -70,22 +72,24 @@
     </el-row>
 
 
-    <el-divider v-if="this.recommendpro!=''"></el-divider>
+    <el-divider v-if="this.recommendpro!==''"></el-divider>
     <!-- 推荐商品-->
-    <el-row class="new" v-if="this.recommendpro!=''">
+    <el-row class="new" v-if="this.recommendpro!==''">
       <el-col :span="4" :offset="4">
         <h2>推荐商品</h2>
       </el-col>
       <el-col class="center" :span="16" :offset="4">
         <ul class="typeProduct">
           <li v-for="item in recommendpro" :key="item.id">
-            <div class="imgbox"><img :src="item.images[0]" :width="imgwidth" :alt="item.name" @click="gotoDetails(item.id)"></div>
-            <div class="text" style="position: relative;bottom: 0;height: 50px;">
-              <p class="productPrice">¥<span class="price">{{item.currentprice}}</span> </p>
-              <p class="productName" @click="gotoDetails(item.id)">{{item.name}}</p>
-              <div class="userPlay">
-                <span style="font-size: 12px;color:#bbbcc2;">{{item.creattime}}</span>
-                <span><button @click="addLove(item.id,item.uid)">点击收藏</button></span>
+            <div class="containerProduct">
+              <div class="imgbox"><img :src="item.images[0]" :width="imgwidth" :alt="item.name" @click="gotoDetails(item.id)"></div>
+              <div class="text" style="position: relative;bottom: 0;height: 50px;">
+                <p class="productPrice">¥<span class="price">{{item.currentprice}}</span> </p>
+                <p class="productName" @click="gotoDetails(item.id)">{{item.name}}</p>
+                <div class="userPlay">
+                  <span style="font-size: 12px;color:#bbbcc2;">{{item.creattime}}</span>
+                  <span><button @click="addLove(item.id,item.uid)">点击收藏</button></span>
+                </div>
               </div>
             </div>
           </li>
@@ -206,9 +210,9 @@ export default {
     },
     //添加商品进收藏方法
     addLove(id,uid){
-      if(this.$store.state.userid != 0){
+      if(this.$store.state.userid !== 0){
         //判断是否是自己的商品
-        if(this.$store.state.userid == uid){
+        if(this.$store.state.userid === uid){
           this.$message({
             message: '不能收藏自己发布的商品！',
             type: 'warning'
@@ -226,7 +230,7 @@ export default {
               uid: this.$store.state.userid,
               pid: id
             }).then(res => {
-              if(res.data == 1){
+              if(res.data === 1){
                 this.$message({
                   message: '商品收藏成功！',
                   type: 'success'
@@ -253,7 +257,7 @@ export default {
       this.$axios.post('/utils/selectDateFromStatis',{
         dates: moment().format('YYYY-MM-DD')
       }).then(res => {
-        if(res.data.length == 0){
+        if(res.data.length === 0){
           //如果数据库不存在今天的数据，插入今天日期与默认点击量
           this.$axios.post('/utils/insertDateInStatis',{
             dates: moment().format('YYYY-MM-DD'),

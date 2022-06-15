@@ -10,9 +10,9 @@
           <el-row>
             <!-- 商品图片 -->
             <el-col :span="10">
-              <div class="pimg"> <img :src="imgblur" alt="图片丢失了"> </div>
+              <div class="pimg"> <img :src="imgblur" alt=""> </div>
               <div class="pimgs">
-                <ul> <li v-for="item in data.images" @click="switchImg(item)" :key="item"><img :src="item" alt="图片丢失了"></li> </ul>
+                <ul> <li v-for="item in data.images" @click="switchImg(item)" :key="item"><img :src="item" alt=""></li> </ul>
               </div>
             </el-col>
             <!-- 商品信息 -->
@@ -28,15 +28,15 @@
                 <tr> <td>价格</td>     <td class="pdprice">¥ {{data.currentprice}}                 </td> </tr>
                 <tr> <td>商品原价</td> <td style="color: #999999;">¥<s> {{data.originalprice}}</s>  </td> </tr>
                 <tr> <td>交易地址</td> <td>{{data.address}}                                        </td> </tr>
-                <tr> <td>商品状态</td> <td>{{data.status == '1'?"未出售":"已出售"}}                    </td> </tr>
+                <tr> <td>商品状态</td> <td>{{data.status === '1'?"未出售":"已出售"}}                    </td> </tr>
                 <tr> <td>交易方式</td> <td>{{data.deal}}                                            </td> </tr>
                 <tr> <td>卖家</td>     <td>{{data.username}}                                        </td> </tr>
               </table>
-              <div class="pdbutton" v-if="data.deal=='线上交易'">
+              <div class="pdbutton" v-if="data.deal==='线上交易'">
                 <el-button type="success" @click="buy" icon="el-icon-wallet" style="width: 140px;">立即购买</el-button>
                 <el-button type="danger"  @click="addCart(data.id)" icon="el-icon-shopping-cart-full" style="width: 140px;">加入购物车</el-button>
               </div>
-              <div class="pdbutton" v-if="data.deal=='线下交易'">
+              <div class="pdbutton" v-if="data.deal==='线下交易'">
                 <el-button type="success" @click="showUserInfo(data.uid)" icon="el-icon-wallet">查看卖家联系方式</el-button>
               </div>
             </el-col>
@@ -57,7 +57,7 @@
           </div>
 
           <!-- 发布评论模块 -->
-          <div class="leaveMessage" v-if="this.User != ''">
+          <div class="leaveMessage" v-if="this.User !== ''">
             <div class="meimg"><img :src="User.userimgpath" alt=""></div>
             <textarea :style="backcolor" maxlength="200" placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力、反动的言论。" @mouseenter="enter"
               @mouseleave="leave" v-model="textarea"></textarea>
@@ -81,7 +81,7 @@
               </el-row>
             </li>
             <!-- 评论统计模块 -->
-            <li class="pagebig" v-if="comments != ''">
+            <li class="pagebig" v-if="comments !== ''">
               <div class="buyer-headerimg">
               </div>
               <el-pagination background
@@ -156,7 +156,7 @@
         </el-row>
         <el-row class="orderInfo">
           <el-col :span="10"> 创建日期：<b>{{order.createtime}}</b> </el-col>
-          <el-col :span="5"> 订单状态：{{order.pay==1?'未支付':'已支付'}} </el-col>
+          <el-col :span="5"> 订单状态：{{order.pay===1?'未支付':'已支付'}} </el-col>
           <el-col :span="5"> 数量：{{order.productnumber}} </el-col>
           <el-col :span="2" style="text-align: right;"> 总计： </el-col>
           <el-col :span="2"> ¥{{order.producttotal}} </el-col>
@@ -241,6 +241,8 @@
       }
     },
     created() {
+      //页面置顶
+      window.scrollTo(0, 0);
       //请求用户信息
       this.$axios.get('/user/selectUserById', {
         params: {
@@ -274,7 +276,7 @@
       },
       //鼠标移出
       leave() {
-        this.backcolor = this.textarea.length == 0 ? "background:#f4f5f7" :
+        this.backcolor = this.textarea.length === 0 ? "background:#f4f5f7" :
           "background:#FFFFFF;border: 1px solid #00a1d6;";
       },
       //加载商品详情方法
@@ -323,7 +325,7 @@
       //添加商品进收藏方法
       addLove(id){
         //判断是否登录
-        if(this.$store.state.userid == 0){
+        if(this.$store.state.userid === 0){
           this.$message({
             message: '请登录！',
             type: 'warning'
@@ -331,7 +333,7 @@
           return null;
         }
         //判断是否是自己的商品
-        if(this.$store.state.userid == this.data.uid){
+        if(this.$store.state.userid === this.data.uid){
           this.$message({
             message: '不能收藏自己发布的商品！',
             type: 'warning'
@@ -339,7 +341,7 @@
           return null;
         }
         //判断商品是否下架
-        if(this.data.status == '2'){
+        if(this.data.status === '2'){
           this.$message({
             message: '商品已出售！',
             type: 'warning'
@@ -354,7 +356,7 @@
             uid: this.$store.state.userid,
             pid: id
           }).then(res => {
-            if(res.data == 1){
+            if(res.data === 1){
               this.$message({
                 message: '商品收藏成功！',
                 type: 'success'
@@ -400,7 +402,7 @@
             text: this.textarea,
             time: date
           }).then(res => {
-             if(res.data == 1){
+             if(res.data === 1){
                this.$message({
                  message: '发布成功！',
                  type: 'success'
@@ -438,7 +440,7 @@
       },
       //立即购买
       buy(){
-        if(this.$store.state.userid == 0){
+        if(this.$store.state.userid === 0){
           //判断是否登录
           this.$message({
             message: '请登录！',
@@ -446,7 +448,7 @@
           });
         }else{
           //判断商品是否下架
-          if(this.data.status == '2'){
+          if(this.data.status === '2'){
             this.$message({
               message: '商品已出售！',
               type: 'warning'
@@ -454,7 +456,7 @@
             return null;
           }
           //判断是否是自己的商品
-          if(this.$store.state.userid == this.data.uid){
+          if(this.$store.state.userid === this.data.uid){
             this.$message({
               message: '不能购买自己发布的商品！',
               type: 'warning'
@@ -481,7 +483,7 @@
           pid: [this.data.id],
           producttotal: this.data.currentprice
         }).then(res => {
-          if(res.data.resulto == 1){
+          if(res.data.resulto === 1){
             this.innerVisible = true;
             this.selectOrderById(res.data.uuid);
           }
@@ -516,7 +518,7 @@
               pay: '2',
               paytime: moment().format('YYYY-MM-DD HH:mm:ss').toString()
             }).then(res => {
-              if(res.data == 1){
+              if(res.data === 1){
                 //订单中商品全部下架,支付状态显示已支付
                 this.$axios.get('/product/soldOutProduct');
                 //邮箱通知卖家
@@ -525,9 +527,17 @@
                 });
                 this.innerVisible = false;
                 //跳转支付界面，进行沙箱模拟支付
-                setTimeout(res => {
+                /*setTimeout(res => {
                   window.location.href = "http://localhost:9999/utils/orderPay?oid="+order.oid+"&producttotal="+order.producttotal+"&remark="+order.remark;
-                },500);
+                },500);*/
+                //跳转我的页面
+                let loading = this.$loading({
+                  text: "支付成功，即将跳转个人中心页面，请在我的订单模块查询订单状态..."
+                });
+                setTimeout(()=>{
+                  loading.close();
+                  this.$router.push('mine');
+                },3000);
               }
             });
         }).catch(() => {
@@ -548,7 +558,7 @@
           this.$axios.post("/order/deleteOrderByOid",{
             oid: oid
           }).then(res => {
-            if(res.data == 1){
+            if(res.data === 1){
               this.$message({
                 type: 'success',
                 message: '订单已取消!'
@@ -561,9 +571,9 @@
       //添加商品进入购物车
       addCart(pid){
       //查找购物车是否存在商品
-        if(this.$store.state.userid != 0){
+        if(this.$store.state.userid !== 0){
           //判断是否是自己的商品
-          if(this.$store.state.userid == this.data.uid){
+          if(this.$store.state.userid === this.data.uid){
             this.$message({
               message: '不能购买自己发布的商品！',
               type: 'warning'
@@ -571,7 +581,7 @@
             return null;
           }
           //判断商品是否下架
-          if(this.data.status == '2'){
+          if(this.data.status === '2'){
             this.$message({
               message: '商品已出售！',
               type: 'warning'
@@ -582,13 +592,13 @@
             pid:pid,
             uid:this.$store.state.userid
           }).then(res => {
-            if(res.data == 0){
+            if(res.data === 0){
               //添加商品进入购物车
               this.$axios.post('/cart/insertCartById',{
                 pid:pid,
                 uid:this.$store.state.userid
               }).then(res => {
-                if(res.data == 1){
+                if(res.data === 1){
                   this.$message({
                     type: "success",
                     message: "商品添加成功！"
@@ -615,7 +625,7 @@
         this.$axios.post('/utils/selectDateFromStatis',{
           dates: moment().format('YYYY-MM-DD')
         }).then(res => {
-          if(res.data.length == 0){
+          if(res.data.length === 0){
             //如果数据库不存在今天的数据，插入今天日期与默认点击量
             this.$axios.post('/utils/insertDateInStatis',{
               dates: moment().format('YYYY-MM-DD'),
@@ -700,11 +710,11 @@
     width: 100%;
     height: 400px;
     margin: auto;
+    border: 1px solid #eaeaea;
   }
 
   .pimg img {
     width: 100%;
-    height: 100%;
   }
 
   .pimgs {
@@ -726,14 +736,12 @@
 
   .pimgs ul li img {
     width: 95%;
-    height: 95%;
     border-radius: 2px;
-    transition: all 0.5s;
+    transition: all 0.2s;
   }
 
   .pimgs ul li img:hover{
-    width: 97%;
-    height: 97%;
+    width: 100%;
   }
 
   .pdetails {
@@ -790,6 +798,7 @@
     width: 100%;
     padding-top: 20px;
     text-align: center;
+    display: flex;
   }
 
   .pdbutton button {

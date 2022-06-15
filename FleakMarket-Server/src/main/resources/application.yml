@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.18.200:3306/market?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&characterEncoding=UTF-8
+    username: root
+    password: root
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 1000MB
+  mail:
+    host: smtp.163.com
+    port: 25
+    username: t18713827231@163.com
+    password: RWNKORILLAUDXFJE
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        #显示邮件发送信息
+        debug: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.ct.model.ForegroundModel
+
+server:
+  port: 1024
+
+#本地文件上传配置,右键copy static/images的绝对路径
+web:
+  upload-path: D:\WorkSpace\Gitee\FleakMarket\FleakMarket-Server\src\main\resources\static\images
+
+  #支付宝前端响应地址
+  ipAddr: http://localhost:8080/

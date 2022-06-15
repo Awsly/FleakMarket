@@ -155,17 +155,17 @@
   }
   .typeProduct li .imgbox{
     height: 66%;
+    width: 100%;
     padding: 10px;
   }
   .typeProduct li img{
-    width: 100%;
-    height: 100%;
-    margin-bottom: 72%;
-    margin: auto;
-    cursor: pointer;
+    width: 200px;
+    height: 200px;
+    background-repeat: no-repeat;
+    background-position:center center;
+    background-size: cover;
   }
   .typeProduct li p{
-    margin: 0;
     margin: 5px 10px;
     line-height: 20px;
   }
